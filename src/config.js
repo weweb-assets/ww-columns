@@ -54,10 +54,58 @@ function getLengthInUnit(content) {
     };
 }
 
-export function getLabel(content) {
+function getLabel(content) {
     if (content.type === 'columns') return { en: 'Columns', fr: 'Colonnes' };
     if (content.type === 'rows') return { en: 'Rows', fr: 'Lignes' };
     return { en: 'Mosaic', fr: 'Mosaïque' };
+}
+
+function getQuickSections(content) {
+    if (content.type === 'columns') return ['type', 'presets'];
+    if (content.type === 'rows') return ['type'];
+    return ['type', 'presets', 'justifyContent', 'alignItems'];
+}
+
+const COLUMNS_PRESETS = [
+    { icon: 'two-columns', id: 'two-columns' },
+    { icon: 'two-columns-small-left', id: 'two-columns-small-left' },
+    { icon: 'two-columns-small-right', id: 'two-columns-small-right' },
+    { icon: 'three-columns', id: 'three-columns' },
+    { icon: 'three-columns-big-middle', id: 'three-columns-big-middle' },
+    { icon: 'four-columns', id: 'four-columns' },
+    { icon: 'five-columns', id: 'five-columns' },
+    { icon: 'six-columns', id: 'six-columns' },
+];
+
+function getPresets(content) {
+    if (content.type === 'rows') return null;
+    return {
+        presets: {
+            label: { en: 'Presets' },
+            type: 'BigButtons',
+            options: {
+                action: 'setPreset',
+                values:
+                    content.type === 'columns'
+                        ? [
+                              { icon: 'two-columns', id: 'two-columns' },
+                              { icon: 'two-columns-small-left', id: 'two-columns-small-left' },
+                              { icon: 'two-columns-small-right', id: 'two-columns-small-right' },
+                              { icon: 'three-columns', id: 'three-columns' },
+                              { icon: 'three-columns-big-middle', id: 'three-columns-big-middle' },
+                              { icon: 'four-columns', id: 'four-columns' },
+                              { icon: 'five-columns', id: 'five-columns' },
+                              { icon: 'six-columns', id: 'six-columns' },
+                          ]
+                        : [
+                              { icon: 'two-columns-mosaic', id: 'two-columns-mosaic' },
+                              { icon: 'three-columns-mosaic', id: 'three-columns-mosaic' },
+                              { icon: 'four-columns-mosaic', id: 'four-columns-mosaic' },
+                              { icon: 'five-columns-mosaic', id: 'five-columns-mosaic' },
+                          ],
+            },
+        },
+    };
 }
 
 export function getConfiguration(content, bindedProps) {
@@ -67,7 +115,7 @@ export function getConfiguration(content, bindedProps) {
         menuOptions: {
             quick: {
                 label: { en: 'Edit layout' },
-                sections: content.type === 'mosaic' ? ['type', 'justifyContent', 'alignItems'] : ['type'],
+                sections: getQuickSections(content),
             },
         },
         styleOptions: {
@@ -82,20 +130,8 @@ export function getConfiguration(content, bindedProps) {
                     ],
                 },
             },
-            quick: {
-                label: { en: 'Presets' },
-                type: 'BigButtons',
-                options: {
-                    actions: [
-                        { icon: 'settings', value: 'edit' },
-                        { icon: 'settings', value: 'edit' },
-                        { icon: 'settings', value: 'edit' },
-                        { icon: 'settings', value: 'edit' },
-                        { icon: 'settings', value: 'edit' },
-                        { icon: 'settings', value: 'edit' },
-                    ],
-                },
-            },
+
+            ...getPresets(content),
             ...(content.type === 'mosaic'
                 ? {
                       justifyContent: JUSTIFY_CONTENT,

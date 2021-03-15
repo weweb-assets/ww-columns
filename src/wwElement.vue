@@ -269,22 +269,7 @@ export default {
                 if (event.type === 'add') {
                     const type = this.$store.getters['websiteData/getWwObjectType'](event.value.uid);
                     if (type !== 'ww-flexbox' && type !== 'ww-columns') {
-                        const container = await wwLib.createElement(
-                            'ww-flexbox',
-                            {
-                                default: {
-                                    children: [{ ...event.value }],
-                                    direction: this.direction === 'row' ? 'column' : 'row',
-                                },
-                            },
-                            {
-                                style: {
-                                    default: {
-                                        padding: '8px',
-                                    },
-                                },
-                            }
-                        );
+                        const container = await this.createContainer([event.value]);
                         const children = [...event.list];
                         children.splice(event.index, 1, container);
                         update.children = children;
@@ -303,6 +288,157 @@ export default {
             return list;
         },
         /* wwEditor:start */
+        async createContainer(children = []) {
+            return await wwLib.createElement(
+                'ww-flexbox',
+                {
+                    default: {
+                        children,
+                        direction: this.direction === 'row' ? 'column' : 'row',
+                        alignItems: 'stretch',
+                    },
+                },
+                {
+                    style: {
+                        default: {
+                            padding: '8px',
+                        },
+                    },
+                }
+            );
+        },
+        async setPreset(preset) {
+            switch (preset) {
+                case 'two-columns': {
+                    let children = this.content.children.slice(0, 2);
+                    for (let i = children.length; i < 2; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [6, 6], lengthInUnit: 12 });
+                    break;
+                }
+                case 'two-columns-small-left': {
+                    let children = this.content.children.slice(0, 2);
+                    for (let i = children.length; i < 2; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [3, 9], lengthInUnit: 12 });
+                    break;
+                }
+                case 'two-columns-small-right': {
+                    let children = this.content.children.slice(0, 2);
+                    for (let i = children.length; i < 2; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [9, 3], lengthInUnit: 12 });
+                    break;
+                }
+                case 'three-columns': {
+                    let children = this.content.children.slice(0, 3);
+                    for (let i = children.length; i < 3; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [4, 4, 4], lengthInUnit: 12 });
+                    break;
+                }
+                case 'three-columns-big-middle': {
+                    let children = this.content.children.slice(0, 3);
+                    for (let i = children.length; i < 3; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [2, 8, 2], lengthInUnit: 12 });
+                    break;
+                }
+                case 'four-columns': {
+                    let children = this.content.children.slice(0, 4);
+                    for (let i = children.length; i < 4; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [3, 3, 3, 3], lengthInUnit: 12 });
+                    break;
+                }
+                case 'five-columns': {
+                    let children = this.content.children.slice(0, 5);
+                    for (let i = children.length; i < 5; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [4, 4, 4, 4, 4], lengthInUnit: 20 });
+                    break;
+                }
+                case 'six-columns': {
+                    let children = this.content.children.slice(0, 6);
+                    for (let i = children.length; i < 6; i++) {
+                        const container = await this.createContainer();
+                        children.push(container);
+                    }
+                    this.$emit('update', { children, grid: [2, 2, 2, 2, 2, 2], lengthInUnit: 12 });
+                    break;
+                }
+                case 'two-columns-mosaic': {
+                    if (this.isBinded) {
+                        this.$emit('update', { grid: [6], lengthInUnit: 12 });
+                    } else {
+                        let children = [...this.content.children];
+                        for (let i = children.length; i < 2; i++) {
+                            const container = await this.createContainer();
+                            children.push(container);
+                        }
+                        const grid = children.map(() => 6);
+                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                    }
+                    break;
+                }
+                case 'three-columns-mosaic': {
+                    if (this.isBinded) {
+                        this.$emit('update', { grid: [4], lengthInUnit: 12 });
+                    } else {
+                        let children = [...this.content.children];
+                        for (let i = children.length; i < 3; i++) {
+                            const container = await this.createContainer();
+                            children.push(container);
+                        }
+                        const grid = children.map(() => 4);
+                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                    }
+                    break;
+                }
+                case 'four-columns-mosaic': {
+                    if (this.isBinded) {
+                        this.$emit('update', { grid: [3], lengthInUnit: 12 });
+                    } else {
+                        let children = [...this.content.children];
+                        for (let i = children.length; i < 4; i++) {
+                            const container = await this.createContainer();
+                            children.push(container);
+                        }
+                        const grid = children.map(() => 3);
+                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                    }
+                    break;
+                }
+                case 'five-columns-mosaic': {
+                    if (this.isBinded) {
+                        this.$emit('update', { grid: [4], lengthInUnit: 20 });
+                    } else {
+                        let children = [...this.content.children];
+                        for (let i = children.length; i < 5; i++) {
+                            const container = await this.createContainer();
+                            children.push(container);
+                        }
+                        const grid = children.map(() => 4);
+                        this.$emit('update', { children, grid, lengthInUnit: 20 });
+                    }
+                    break;
+                }
+            }
+        },
         fixGrid() {
             if (this.content.type === 'rows') return;
             if (this.isBinded) {
