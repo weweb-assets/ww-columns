@@ -2,7 +2,7 @@
     "componentPath": "./src/wwElement.vue",
     "editor": {
         "otherOptions": {
-            "wwObjects": {
+            "children": {
                 "bindable": "repeatable",
                 "label": {
                     "en": "Content data",
