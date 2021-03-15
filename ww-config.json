@@ -1,15 +1,13 @@
 {
     "componentPath": "./src/wwElement.vue",
     "editor": {
-        "label": {
-            "en": "My Element"
-        },
-        "styleOptions": {
-            "textColor": {
+        "otherOptions": {
+            "wwObjects": {
+                "bindable": "repeatable",
                 "label": {
-                    "en": "Text color"
-                },
-                "type": "Color"
+                    "en": "Content data",
+                    "fr": "Données"
+                }
             }
         }
     }
