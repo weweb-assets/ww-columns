@@ -102,8 +102,8 @@ export default {
         isHover: false,
         /* wwEditor:end */
     },
-    wwEditorConfiguration({ content }) {
-        return getConfiguration(content);
+    wwEditorConfiguration({ content, bindedProps }) {
+        return getConfiguration(content, bindedProps);
     },
     props: {
         content: { type: Object, required: true },
@@ -224,6 +224,8 @@ export default {
             }
         },
         fit(list, grid) {
+            if (this.isBinded) return;
+            if (this.content.type !== 'columns') return;
             const totalGrid = list.reduce((total, item, i) => total + this.getGridAt(i) || 0, 0);
             const lengthInUnit = this.content.lengthInUnit;
             if (totalGrid === lengthInUnit && list.length === grid.length) return grid;
@@ -526,7 +528,6 @@ export default {
             if (this.wwEditorState.isACopy) {
                 return;
             }
-            this.oldLengthInUnit = oldContent.lengthInUnit || this.oldLengthInUnit || newContent.lengthInUnit;
             if (
                 (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
                 newContent.type !== oldContent.type ||
@@ -536,12 +537,7 @@ export default {
                 if (this.content.type === 'columns') {
                     grid = this.fit(newContent.children, grid);
                 } else {
-                    const getNewGridItem = item => {
-                        return Math.round(
-                            (newContent.lengthInUnit * item) / (this.oldLengthInUnit || newContent.lengthInUnit)
-                        );
-                    };
-                    grid = grid.map(item => Math.min(getNewGridItem(item), newContent.lengthInUnit));
+                    grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
                 }
                 if (!_.isEqual(grid, newContent.grid)) this.$emit('update-effect', { grid });
             }
