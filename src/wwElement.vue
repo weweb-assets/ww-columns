@@ -170,6 +170,7 @@ export default {
                 marginTop: 'unset',
                 marginLeft: 'unset',
                 flexShrink: 'unset',
+                justifyContent: '',
                 width: 'unset',
             };
 
@@ -592,6 +593,14 @@ export default {
             if (newVal !== oldVal) {
                 this.style = this.getStyle();
                 this.wwObjectFlex = this.getWwObjectFlex();
+            }
+        },
+        'content.grid'() {
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+            if (!this.isDraging) {
+                this.fixGrid();
             }
         },
         isDraging(isDraging) {
