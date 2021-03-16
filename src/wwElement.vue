@@ -165,7 +165,9 @@ export default {
     },
     methods: {
         getItemStyle(item, index) {
-            const style = {};
+            const style = {
+                '--display': 'block',
+            };
 
             //Reverse
             if (this.content.reverse) {
@@ -185,6 +187,7 @@ export default {
             }
 
             if (this.content.type === 'mosaic' && this.content.alignItems !== 'stretch') {
+                style['--display'] = 'flex';
                 style.flexDirection = this.content.type === 'rows' ? 'row' : 'column';
                 style.justifyContent = this.content.alignItems;
             }
@@ -627,7 +630,7 @@ export default {
         width: 100%;
     }
     &__item {
-        display: flex;
+        display: var(--display);
         position: relative;
         box-sizing: border-box;
 
