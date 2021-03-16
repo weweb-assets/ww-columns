@@ -1,6 +1,7 @@
 {
     "componentPath": "./src/wwElement.vue",
     "editor": {
+        "label": { "en": "Columns", "fr": "Colonnes" },
         "otherOptions": {
             "children": {
                 "bindable": "repeatable",

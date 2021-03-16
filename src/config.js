@@ -66,17 +66,6 @@ function getQuickSections(content) {
     return ['type', 'presets', 'justifyContent', 'alignItems'];
 }
 
-const COLUMNS_PRESETS = [
-    { icon: 'two-columns', id: 'two-columns' },
-    { icon: 'two-columns-small-left', id: 'two-columns-small-left' },
-    { icon: 'two-columns-small-right', id: 'two-columns-small-right' },
-    { icon: 'three-columns', id: 'three-columns' },
-    { icon: 'three-columns-big-middle', id: 'three-columns-big-middle' },
-    { icon: 'four-columns', id: 'four-columns' },
-    { icon: 'five-columns', id: 'five-columns' },
-    { icon: 'six-columns', id: 'six-columns' },
-];
-
 function getPresets(content) {
     if (content.type === 'rows') return null;
     return {
@@ -111,7 +100,7 @@ function getPresets(content) {
 export function getConfiguration(content, bindedProps) {
     const isBinded = bindedProps && bindedProps.children;
     return {
-        label: getLabel(content),
+        // label: getLabel(content),
         menuOptions: {
             quick: {
                 label: { en: 'Edit layout' },

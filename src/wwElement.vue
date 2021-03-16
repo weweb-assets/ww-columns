@@ -167,11 +167,17 @@ export default {
         getItemStyle(item, index) {
             const style = {
                 '--display': 'block',
+                marginTop: 'unset',
+                marginLeft: 'unset',
+                flexShrink: 'unset',
+                width: 'unset',
             };
 
             //Reverse
             if (this.content.reverse) {
                 style.order = this.content.children.length - 1 - index;
+            } else {
+                style.order = index;
             }
 
             //Push last
@@ -186,13 +192,17 @@ export default {
                 }
             }
 
-            if (this.content.type === 'mosaic' && this.content.alignItems !== 'stretch') {
-                style['--display'] = 'flex';
-                style.flexDirection = this.content.type === 'rows' ? 'row' : 'column';
-                style.justifyContent = this.content.alignItems;
-            }
-
             if (this.content.type !== 'rows') {
+                style['--display'] = 'flex';
+                style.flexDirection = 'column';
+                if (
+                    this.content.alignItems !== 'stretch' &&
+                    this.content.alignItems !== 'baseline' &&
+                    this.content.type === 'mosaic'
+                ) {
+                    style.justifyContent = this.content.alignItems;
+                }
+
                 const widthInUnit = this.getGridAt(index);
                 style.width = `calc(${widthInUnit} * 100% / ${this.content.lengthInUnit})`;
                 style.flexShrink = '0';
@@ -214,7 +224,8 @@ export default {
             return this.content.type === 'mosaic' ? ['width', 'display'] : [];
         },
         getWwObjectFlex() {
-            return this.content.type === 'mosaic' ? 'unset' : '1';
+            const isFlex = this.content.type !== 'mosaic' || this.content.alignItems === 'stretch';
+            return isFlex ? '1' : 'unset';
         },
         getGridAt(index, grid) {
             index = this.isBinded ? 0 : index;
@@ -580,6 +591,7 @@ export default {
         'content.alignItems'(newVal, oldVal) {
             if (newVal !== oldVal) {
                 this.style = this.getStyle();
+                this.wwObjectFlex = this.getWwObjectFlex();
             }
         },
         isDraging(isDraging) {
