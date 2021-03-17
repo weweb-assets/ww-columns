@@ -72,7 +72,7 @@
             <div class="ww-columns__menu">
                 <wwEditorIcon
                     small
-                    name="ww-columns"
+                    name="two-columns"
                     @mouseenter="isHover = true"
                     @mouseleave="isHover = false"
                 ></wwEditorIcon>
