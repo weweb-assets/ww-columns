@@ -69,7 +69,12 @@
         <Paginator v-if="content.pagination === 'bottom'" class="paginator"></Paginator>
         <!-- wwEditor:start -->
         <div class="ww-columns__menu">
-            <wwEditorIcon small name="config" @mouseenter="isHover = true" @mouseleave="isHover = false"></wwEditorIcon>
+            <wwEditorIcon
+                small
+                name="ww-columns"
+                @mouseenter="isHover = true"
+                @mouseleave="isHover = false"
+            ></wwEditorIcon>
         </div>
         <div class="ww-columns__border" :class="{ '-binded': isBinded }"></div>
         <!-- wwEditor:end -->

@@ -105,6 +105,7 @@ export function getConfiguration(content, bindedProps) {
             quick: {
                 label: { en: 'Edit layout' },
                 sections: getQuickSections(content),
+                bind: [{ prop: 'children', label: { en: 'Repeat enclosed items' } }],
             },
         },
         styleOptions: {
