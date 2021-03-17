@@ -68,15 +68,18 @@
         </wwLayout>
         <Paginator v-if="content.pagination === 'bottom'" class="paginator"></Paginator>
         <!-- wwEditor:start -->
-        <div class="ww-columns__menu">
-            <wwEditorIcon
-                small
-                name="ww-columns"
-                @mouseenter="isHover = true"
-                @mouseleave="isHover = false"
-            ></wwEditorIcon>
-        </div>
-        <div class="ww-columns__border" :class="{ '-binded': isBinded }"></div>
+        <template v-if="isEditing">
+            <div class="ww-columns__menu">
+                <wwEditorIcon
+                    small
+                    name="ww-columns"
+                    @mouseenter="isHover = true"
+                    @mouseleave="isHover = false"
+                ></wwEditorIcon>
+            </div>
+            <div class="ww-columns__border" :class="{ '-binded': isBinded }"></div>
+        </template>
+
         <!-- wwEditor:end -->
     </div>
 </template>
@@ -97,7 +100,7 @@ export default {
         reverse: wwLib.responsive(false),
         pushLast: wwLib.responsive(false),
         justifyContent: wwLib.responsive('center'),
-        alignItems: wwLib.responsive('start'),
+        alignItems: wwLib.responsive('stretch'),
         grid: wwLib.responsive([]),
 
         maxItem: wwLib.responsive(50),
