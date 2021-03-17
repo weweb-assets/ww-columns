@@ -6,8 +6,8 @@
             "children": {
                 "bindable": "repeatable",
                 "label": {
-                    "en": "Content data",
-                    "fr": "Données"
+                    "en": "Items",
+                    "fr": "Items"
                 }
             }
         }
