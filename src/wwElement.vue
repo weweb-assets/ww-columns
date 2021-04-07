@@ -8,7 +8,7 @@
             :style="layoutStyle"
             :start="start"
             :pagination="!!content.pagination"
-            :max="content.maxItem"
+            :max="content.maxItems"
             :inheritFromElement="inheritFromElement"
             @update:total="total = $event"
             @update="update"
@@ -103,7 +103,7 @@ export default {
         alignItems: wwLib.responsive('stretch'),
         grid: wwLib.responsive([]),
 
-        maxItem: wwLib.responsive(50),
+        maxItems: wwLib.responsive(50),
         pagination: wwLib.responsive(null),
 
         /* wwEditor:start */
@@ -572,11 +572,11 @@ export default {
             if (this.wwEditorState.isACopy) {
                 return;
             }
-            if (isPaginated && !wasPaginated && !this.content.maxItem) {
-                this.$emit('update-effect', { maxItem: 20 });
+            if (isPaginated && !wasPaginated && !this.content.maxItems) {
+                this.$emit('update-effect', { maxItems: 20 });
             }
         },
-        'content.maxItem'(newVal, oldVal) {
+        'content.maxItems'(newVal, oldVal) {
             if (this.wwEditorState.isACopy) {
                 return;
             }
