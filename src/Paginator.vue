@@ -29,15 +29,15 @@
 export default {
     computed: {
         nbPage() {
-            if (this.$parent.content.maxItem) {
-                return Math.ceil(this.$parent.total / this.$parent.content.maxItem);
+            if (this.$parent.content.maxItems) {
+                return Math.ceil(this.$parent.total / this.$parent.content.maxItems);
             } else {
                 return 1;
             }
         },
         currentPage() {
-            if (this.$parent.content.maxItem) {
-                return Math.floor(this.$parent.start / this.$parent.content.maxItem);
+            if (this.$parent.content.maxItems) {
+                return Math.floor(this.$parent.start / this.$parent.content.maxItems);
             } else {
                 return 1;
             }
@@ -87,7 +87,7 @@ export default {
     methods: {
         goTo(index) {
             if (index !== -1 && index !== this.currentPage) {
-                this.$parent.start = index * this.$parent.content.maxItem;
+                this.$parent.start = index * this.$parent.content.maxItems;
             }
         },
         prev() {
