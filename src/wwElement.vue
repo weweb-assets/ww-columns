@@ -292,8 +292,13 @@ export default {
 
                 let update = { grid };
                 if (event.type === 'add') {
-                    const type = this.$store.getters['websiteData/getWwObjectType'](event.value.uid);
-                    if (type !== 'ww-flexbox' && type !== 'ww-columns') {
+                    const componentBaseId = this.$store.getters['websiteData/getWwObjectBaseId'](event.value.uid);
+
+                    //ww-flexbox or ww-columns
+                    if (
+                        componentBaseId !== 'b783dc65-d528-4f74-8c14-e27c934c39b1' &&
+                        componentBaseId !== '21881619-a984-4847-81a9-922c3dbb5853'
+                    ) {
                         const container = await this.createContainer([event.value]);
                         const children = [...event.list];
                         children.splice(event.index, 1, container);
