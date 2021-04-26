@@ -263,10 +263,14 @@ export default {
         },
         async update(event) {
             /* wwEditor:start */
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
             if (this.content.type === 'rows') {
                 return;
             } else {
-                let grid;
+                let grid = [];
+
                 switch (event.type) {
                     case 'add': {
                         const index = Math.max(0, event.index - 1);
@@ -287,6 +291,8 @@ export default {
                     case 'move':
                         grid = this.moveItem(this.content.grid, event.fromIndex, event.index);
                         break;
+                    default:
+                        return;
                 }
                 grid = grid.map(item => Math.min(item, this.content.lengthInUnit));
 
@@ -319,6 +325,8 @@ export default {
         },
         /* wwEditor:start */
         async createContainer(children = []) {
+            console.log('OUI ??');
+
             return await wwLib.createElement(
                 'ww-flexbox',
                 {
@@ -577,9 +585,17 @@ export default {
             if (this.wwEditorState.isACopy) {
                 return;
             }
-            if (isPaginated && !wasPaginated && !this.content.maxItems) {
-                this.$emit('update-effect', { maxItems: 20 });
-            }
+
+            clearTimeout(this.isPaginatedTimeout);
+            this.isPaginatedTimeout = setTimeout(() => {
+                if (!isPaginated) {
+                    this.$emit('update-effect', { paginatorText: null, paginatorPrev: null, paginatorNext: null });
+                }
+
+                if (isPaginated && !wasPaginated && !this.content.maxItems) {
+                    this.$emit('update-effect', { maxItems: 20 });
+                }
+            }, 500);
         },
         'content.maxItems'(newVal, oldVal) {
             if (this.wwEditorState.isACopy) {

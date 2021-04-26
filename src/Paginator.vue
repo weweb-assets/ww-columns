@@ -101,23 +101,27 @@ export default {
             }
         },
     },
+    /* wwEditor:start */
     async mounted() {
-        /* wwEditor:start */
         if (this.$parent.wwEditorState.isACopy) {
             return;
         }
-        if (!this.$parent.content.paginatorText) {
-            this.$parent.$emit('update-effect', { paginatorText: await wwLib.createElement('ww-text') });
+        if (
+            !this.$parent.content.paginatorText ||
+            !this.$parent.content.paginatorPrev ||
+            !this.$parent.content.paginatorNext
+        ) {
+            const paginatorText = await wwLib.createElement('ww-text');
+            const paginatorPrev = await wwLib.createElement('ww-icon', { icon: 'fas fa-angle-left' });
+            const paginatorNext = await wwLib.createElement('ww-icon', { icon: 'fas fa-angle-right' });
+            this.$parent.$emit('update-effect', {
+                paginatorText,
+                paginatorPrev,
+                paginatorNext,
+            });
         }
-        if (!this.$parent.content.paginatorPrev) {
-            const paginatorPrev = await wwLib.createElement('ww-icon');
-            this.$parent.$emit('update-effect', { paginatorPrev });
-        }
-        if (!this.$parent.content.paginatorNext) {
-            this.$parent.$emit('update-effect', { paginatorNext: await wwLib.createElement('ww-icon') });
-        }
-        /* wwEditor:end */
     },
+    /* wwEditor:end */
 };
 </script>
 
