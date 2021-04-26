@@ -325,8 +325,6 @@ export default {
         },
         /* wwEditor:start */
         async createContainer(children = []) {
-            console.log('OUI ??');
-
             return await wwLib.createElement(
                 'ww-flexbox',
                 {
