@@ -221,9 +221,9 @@ export default {
         },
         getStyle() {
             return {
-                flexWrap: this.content.type === 'mosaic' ? 'wrap' : null,
-                justifyContent: this.content.type === 'mosaic' ? this.content.justifyContent : null,
-                alignItems: this.content.type === 'mosaic' ? this.content.alignItems : null,
+                flexWrap: this.content.type === 'mosaic' ? 'wrap' : 'unset',
+                justifyContent: this.content.type === 'mosaic' ? this.content.justifyContent : 'unset',
+                alignItems: this.content.type === 'mosaic' ? this.content.alignItems : 'unset',
             };
         },
         getDirection() {
