@@ -145,7 +145,7 @@ export function getConfiguration(content, bindedProps) {
         settingsOptions: {
             ...getLengthInUnit(content),
             maxItems: {
-                label: { en: 'Number of items max', fr: 'Nombre maximal' },
+                label: { en: 'Max number of items', fr: 'Nombre maximal' },
                 type: 'Number',
                 options: {
                     nullable: true,
