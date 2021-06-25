@@ -47,7 +47,6 @@ function getLengthInUnit(content) {
             ? null
             : {
                   lengthInUnit: {
-                      label: { en: 'Number of units', fr: "Nb d'unité" },
                       type: 'Number',
                   },
               }),
