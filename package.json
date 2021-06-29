@@ -1,6 +1,6 @@
 {
     "name": "ww-columns",
-    "version": "0.0.2",
+    "version": "3.0.0",
     "scripts": {
         "build": "weweb build",
         "serve": "weweb serve"
