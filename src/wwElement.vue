@@ -21,7 +21,9 @@
                         {
                             editing: isEditing,
                             draging: dragingIndex === index,
+                            /* wwEditor:start */
                             'show-length': showLength,
+                            /* wwEditor:end */
                         },
                     ]"
                     :style="getItemStyle(item, index)"
@@ -89,7 +91,6 @@ import Paginator from './Paginator.vue';
 import { getConfiguration } from './config.js';
 
 export default {
-    name: '__COMPONENT_NAME__',
     components: { Paginator },
     wwDefaultContent: {
         children: [],
@@ -116,8 +117,9 @@ export default {
     props: {
         content: { type: Object, required: true },
         /* wwEditor:start */
-        wwEditorState: Object,
+        wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
+        wwFrontState: { type: Object, required: true },
     },
     emits: ['update:content', 'update:content:effect'],
     data() {
@@ -136,7 +138,7 @@ export default {
     },
     computed: {
         screenSize() {
-            return this.$store.getters['front/getScreenSize'];
+            return this.wwFrontState.screenSize;
         },
         isEditing() {
             /* wwEditor:start */
@@ -159,12 +161,14 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
+        /* wwEditor:start */
         isDraging() {
             return this.dragingIndex >= 0;
         },
         showLength() {
             return this.isDraging || this.isHover;
         },
+        /* wwEditor:end */
         layoutStyle() {
             return {
                 flexDirection: this.direction,
