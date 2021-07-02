@@ -146,7 +146,7 @@ export default {
         },
         isBinded() {
             /* wwEditor:start */
-            return this.wwEditorState.bindedProps && this.wwEditorState.bindedProps.children;
+            return this.wwEditorState.boundProps && this.wwEditorState.boundProps.children;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
