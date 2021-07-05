@@ -9,19 +9,21 @@
             :start="start"
             :pagination="!!content.pagination"
             :max="content.maxItems"
-            :inheritFromElement="inheritFromElement"
-            @update:total="total = $event"
-            @update="update"
+            :inherit-from-element="inheritFromElement"
             ww-responsive="wwLayout"
+            @update:total="total = $event"
+            @update:list="update"
         >
-            <template v-slot="{ item, index }">
+            <template #default="{ item, index }">
                 <wwLayoutItem
                     class="ww-columns__item"
                     :class="[
                         {
                             editing: isEditing,
                             draging: dragingIndex === index,
+                            /* wwEditor:start */
                             'show-length': showLength,
+                            /* wwEditor:end */
                         },
                     ]"
                     :style="getItemStyle(item, index)"
@@ -43,8 +45,8 @@
                             @startDrag="startDrag($event, index, 'start')"
                             @drag="drag($event)"
                             @endDrag="endDrag($event)"
-                            @mouseenter.native="isHover = true"
-                            @mouseleave.native="isHover = false"
+                            @mouseenter="isHover = true"
+                            @mouseleave="isHover = false"
                         />
                         <wwDraggable
                             v-if="content.type === 'mosaic'"
@@ -54,8 +56,8 @@
                             @startDrag="startDrag($event, index, 'end')"
                             @drag="drag($event)"
                             @endDrag="endDrag($event)"
-                            @mouseenter.native="isHover = true"
-                            @mouseleave.native="isHover = false"
+                            @mouseenter="isHover = true"
+                            @mouseleave="isHover = false"
                         />
                         <div v-if="showLength" class="ww-columns__units">
                             {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
@@ -89,7 +91,6 @@ import Paginator from './Paginator.vue';
 import { getConfiguration } from './config.js';
 
 export default {
-    name: '__COMPONENT_NAME__',
     components: { Paginator },
     wwDefaultContent: {
         children: [],
@@ -116,9 +117,11 @@ export default {
     props: {
         content: { type: Object, required: true },
         /* wwEditor:start */
-        wwEditorState: Object,
+        wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
+        wwFrontState: { type: Object, required: true },
     },
+    emits: ['update:content', 'update:content:effect'],
     data() {
         return {
             dragingHandle: 'start',
@@ -135,7 +138,7 @@ export default {
     },
     computed: {
         screenSize() {
-            return this.$store.getters['front/getScreenSize'];
+            return this.wwFrontState.screenSize;
         },
         isEditing() {
             /* wwEditor:start */
@@ -158,18 +161,146 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
+        /* wwEditor:start */
         isDraging() {
             return this.dragingIndex >= 0;
         },
         showLength() {
             return this.isDraging || this.isHover;
         },
+        /* wwEditor:end */
         layoutStyle() {
             return {
                 flexDirection: this.direction,
                 ...this.style,
             };
         },
+    },
+    watch: {
+        /* wwFront:start */
+        screenSize(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                this.style = this.getStyle();
+                this.wwObjectFlex = this.getWwObjectFlex();
+                this.direction = this.getDirection();
+                this.inheritFromElement = this.getInheritFromElement();
+            }
+        },
+        /* wwFront:end */
+        total(val, oldVal) {
+            if (val !== oldVal) {
+                this.start = 0;
+            }
+        },
+
+        /* wwEditor:start */
+        content(newContent, oldContent) {
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+            if (
+                (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
+                newContent.type !== oldContent.type ||
+                (!_.isEqual(newContent.grid, oldContent.grid) && !this.isDraging)
+            ) {
+                let grid = [...newContent.grid];
+                if (this.content.type === 'columns') {
+                    grid = this.fit(newContent.children, grid);
+                } else {
+                    grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
+                }
+                if (!_.isEqual(grid, newContent.grid)) this.$emit('update:content:effect', { grid });
+            }
+        },
+        'content.pagination'(isPaginated, wasPaginated) {
+            if (isPaginated !== wasPaginated) {
+                this.start = 0;
+            }
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+
+            clearTimeout(this.isPaginatedTimeout);
+            this.isPaginatedTimeout = setTimeout(() => {
+                if (!isPaginated) {
+                    this.$emit('update:content:effect', {
+                        paginatorText: null,
+                        paginatorPrev: null,
+                        paginatorNext: null,
+                    });
+                }
+
+                if (isPaginated && !wasPaginated && !this.content.maxItems) {
+                    this.$emit('update:content:effect', { maxItems: 20 });
+                }
+            }, 500);
+        },
+        'content.maxItems'(newVal, oldVal) {
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+            if (!newVal && oldVal && this.content.pagination) {
+                this.$emit('update:content:effect', { pagination: null });
+            }
+        },
+        'content.type'(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                this.style = this.getStyle();
+                this.wwObjectFlex = this.getWwObjectFlex();
+                this.direction = this.getDirection();
+                this.inheritFromElement = this.getInheritFromElement();
+            }
+        },
+        'content.justifyContent'(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                this.style = this.getStyle();
+            }
+        },
+        'content.alignItems'(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                this.style = this.getStyle();
+                this.wwObjectFlex = this.getWwObjectFlex();
+            }
+        },
+        'content.grid'() {
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+            if (!this.isDraging) {
+                this.fixGrid();
+            }
+        },
+        isDraging(isDraging) {
+            // By preventing event on the iframe, we ensure that all event will be on Manager, and not capture by the iframe
+            // Previous solution was double listners (both iframe and manager), but i think this is cleaner
+            const iframe = wwLib.getManagerWindow().document.querySelector('.ww-manager-iframe');
+            if (isDraging) {
+                iframe.classList.add('ww-stop-event');
+            } else {
+                iframe.classList.remove('ww-stop-event');
+            }
+        },
+        isBinded(isBinded, wasBinded) {
+            if (isBinded !== wasBinded) {
+                if (isBinded) {
+                    const update = {};
+                    if (this.content.children.length) {
+                        update.grid = [this.content.grid[0] || 1];
+                        update.children = [this.content.children[0]];
+                    }
+                    if (this.content.type === 'columns') {
+                        update.type = 'mosaic';
+                    }
+                    this.$emit('update:content:effect', update);
+                }
+            }
+        },
+        /* wwEditor:end */
+    },
+    mounted() {
+        /* wwEditor:start */
+        this.fixGrid();
+        /* wwEditor:end */
     },
     methods: {
         getItemStyle(item, index) {
@@ -312,7 +443,7 @@ export default {
                     }
                 }
 
-                this.$emit('update-effect', update);
+                this.$emit('update:content:effect', update);
             }
             /* wwEditor:end */
         },
@@ -351,7 +482,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [6, 6], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [6, 6], lengthInUnit: 12 });
                     break;
                 }
                 case 'two-columns-small-left': {
@@ -360,7 +491,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [3, 9], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [3, 9], lengthInUnit: 12 });
                     break;
                 }
                 case 'two-columns-small-right': {
@@ -369,7 +500,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [9, 3], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [9, 3], lengthInUnit: 12 });
                     break;
                 }
                 case 'three-columns': {
@@ -378,7 +509,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [4, 4, 4], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [4, 4, 4], lengthInUnit: 12 });
                     break;
                 }
                 case 'three-columns-big-middle': {
@@ -387,7 +518,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [2, 8, 2], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [2, 8, 2], lengthInUnit: 12 });
                     break;
                 }
                 case 'four-columns': {
@@ -396,7 +527,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [3, 3, 3, 3], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [3, 3, 3, 3], lengthInUnit: 12 });
                     break;
                 }
                 case 'five-columns': {
@@ -405,7 +536,7 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [4, 4, 4, 4, 4], lengthInUnit: 20 });
+                    this.$emit('update:content', { children, grid: [4, 4, 4, 4, 4], lengthInUnit: 20 });
                     break;
                 }
                 case 'six-columns': {
@@ -414,12 +545,12 @@ export default {
                         const container = await this.createContainer();
                         children.push(container);
                     }
-                    this.$emit('update', { children, grid: [2, 2, 2, 2, 2, 2], lengthInUnit: 12 });
+                    this.$emit('update:content', { children, grid: [2, 2, 2, 2, 2, 2], lengthInUnit: 12 });
                     break;
                 }
                 case 'two-columns-mosaic': {
                     if (this.isBinded) {
-                        this.$emit('update', { grid: [6], lengthInUnit: 12 });
+                        this.$emit('update:content', { grid: [6], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
                         for (let i = children.length; i < 2; i++) {
@@ -427,13 +558,13 @@ export default {
                             children.push(container);
                         }
                         const grid = children.map(() => 6);
-                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                        this.$emit('update:content', { children, grid, lengthInUnit: 12 });
                     }
                     break;
                 }
                 case 'three-columns-mosaic': {
                     if (this.isBinded) {
-                        this.$emit('update', { grid: [4], lengthInUnit: 12 });
+                        this.$emit('update:content', { grid: [4], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
                         for (let i = children.length; i < 3; i++) {
@@ -441,13 +572,13 @@ export default {
                             children.push(container);
                         }
                         const grid = children.map(() => 4);
-                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                        this.$emit('update:content', { children, grid, lengthInUnit: 12 });
                     }
                     break;
                 }
                 case 'four-columns-mosaic': {
                     if (this.isBinded) {
-                        this.$emit('update', { grid: [3], lengthInUnit: 12 });
+                        this.$emit('update:content', { grid: [3], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
                         for (let i = children.length; i < 4; i++) {
@@ -455,13 +586,13 @@ export default {
                             children.push(container);
                         }
                         const grid = children.map(() => 3);
-                        this.$emit('update', { children, grid, lengthInUnit: 12 });
+                        this.$emit('update:content', { children, grid, lengthInUnit: 12 });
                     }
                     break;
                 }
                 case 'five-columns-mosaic': {
                     if (this.isBinded) {
-                        this.$emit('update', { grid: [4], lengthInUnit: 20 });
+                        this.$emit('update:content', { grid: [4], lengthInUnit: 20 });
                     } else {
                         let children = [...this.content.children];
                         for (let i = children.length; i < 5; i++) {
@@ -469,7 +600,7 @@ export default {
                             children.push(container);
                         }
                         const grid = children.map(() => 4);
-                        this.$emit('update', { children, grid, lengthInUnit: 20 });
+                        this.$emit('update:content', { children, grid, lengthInUnit: 20 });
                     }
                     break;
                 }
@@ -480,7 +611,7 @@ export default {
             if (this.isBinded) {
                 if (this.content.grid.length !== 1) {
                     const grid = this.content.grid.length === 0 ? [this.content.lengthInUnit] : [this.content.grid[0]];
-                    this.$emit('update-effect', { grid });
+                    this.$emit('update:content:effect', { grid });
                     return;
                 }
             } else {
@@ -492,7 +623,7 @@ export default {
                     if (this.content.type === 'columns') {
                         grid = this.fit(this.content.children, grid);
                     }
-                    this.$emit('update-effect', { grid });
+                    this.$emit('update:content:effect', { grid });
                     return;
                 }
             }
@@ -535,131 +666,9 @@ export default {
         setGridValue(update) {
             const grid = this.content.grid.map((val, i) => update[i] || val);
             if (!_.isEqual(grid, this.content.grid)) {
-                this.$emit('update', { grid });
+                this.$emit('update:content', { grid });
             }
         },
-        /* wwEditor:end */
-    },
-    watch: {
-        /* wwFront:start */
-        screenSize(newVal, oldVal) {
-            if (newVal !== oldVal) {
-                this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
-                this.direction = this.getDirection();
-                this.inheritFromElement = this.getInheritFromElement();
-            }
-        },
-        /* wwFront:end */
-        total(val, oldVal) {
-            if (val !== oldVal) {
-                this.start = 0;
-            }
-        },
-
-        /* wwEditor:start */
-        content(newContent, oldContent) {
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-            if (
-                (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
-                newContent.type !== oldContent.type ||
-                (!_.isEqual(newContent.grid, oldContent.grid) && !this.isDraging)
-            ) {
-                let grid = [...newContent.grid];
-                if (this.content.type === 'columns') {
-                    grid = this.fit(newContent.children, grid);
-                } else {
-                    grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
-                }
-                if (!_.isEqual(grid, newContent.grid)) this.$emit('update-effect', { grid });
-            }
-        },
-        'content.pagination'(isPaginated, wasPaginated) {
-            if (isPaginated !== wasPaginated) {
-                this.start = 0;
-            }
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-
-            clearTimeout(this.isPaginatedTimeout);
-            this.isPaginatedTimeout = setTimeout(() => {
-                if (!isPaginated) {
-                    this.$emit('update-effect', { paginatorText: null, paginatorPrev: null, paginatorNext: null });
-                }
-
-                if (isPaginated && !wasPaginated && !this.content.maxItems) {
-                    this.$emit('update-effect', { maxItems: 20 });
-                }
-            }, 500);
-        },
-        'content.maxItems'(newVal, oldVal) {
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-            if (!newVal && oldVal && this.content.pagination) {
-                this.$emit('update-effect', { pagination: null });
-            }
-        },
-        'content.type'(newVal, oldVal) {
-            if (newVal !== oldVal) {
-                this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
-                this.direction = this.getDirection();
-                this.inheritFromElement = this.getInheritFromElement();
-            }
-        },
-        'content.justifyContent'(newVal, oldVal) {
-            if (newVal !== oldVal) {
-                this.style = this.getStyle();
-            }
-        },
-        'content.alignItems'(newVal, oldVal) {
-            if (newVal !== oldVal) {
-                this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
-            }
-        },
-        'content.grid'() {
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-            if (!this.isDraging) {
-                this.fixGrid();
-            }
-        },
-        isDraging(isDraging) {
-            // By preventing event on the iframe, we ensure that all event will be on Manager, and not capture by the iframe
-            // Previous solution was double listners (both iframe and manager), but i think this is cleaner
-            const iframe = wwLib.getManagerWindow().document.querySelector('.ww-manager-iframe');
-            if (isDraging) {
-                iframe.classList.add('ww-stop-event');
-            } else {
-                iframe.classList.remove('ww-stop-event');
-            }
-        },
-        isBinded(isBinded, wasBinded) {
-            if (isBinded !== wasBinded) {
-                if (isBinded) {
-                    const update = {};
-                    if (this.content.children.length) {
-                        update.grid = [this.content.grid[0] || 1];
-                        update.children = [this.content.children[0]];
-                    }
-                    if (this.content.type === 'columns') {
-                        update.type = 'mosaic';
-                    }
-                    this.$emit('update-effect', update);
-                }
-            }
-        },
-        /* wwEditor:end */
-    },
-    mounted() {
-        /* wwEditor:start */
-        this.fixGrid();
         /* wwEditor:end */
     },
 };
