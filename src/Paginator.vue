@@ -1,25 +1,25 @@
 <template>
     <nav role="navigation">
         <ul>
-            <li @click="prev" :class="{ 'hide-icon': !$parent.isEditing && currentPage === 0 }">
-                <wwObject v-bind="$parent.content.paginatorPrev" v-if="$parent.content.paginatorPrev"></wwObject>
+            <li :class="{ 'hide-icon': !$parent.isEditing && currentPage === 0 }" @click="prev">
+                <wwObject v-if="$parent.content.paginatorPrev" v-bind="$parent.content.paginatorPrev"></wwObject>
             </li>
             <template v-if="$parent.content.paginatorText">
                 <li
                     v-for="(nav, index) in navigation"
                     :key="index"
-                    @click="goTo(nav.index)"
                     :aria-current="nav.index === currentPage"
+                    @click="goTo(nav.index)"
                 >
                     <wwObject
                         v-bind="$parent.content.paginatorText"
-                        :wwProps="{ text: nav.label }"
+                        :ww-props="{ text: nav.label }"
                         :states="nav.states"
                     ></wwObject>
                 </li>
             </template>
-            <li @click="next" :class="{ 'hide-icon': !$parent.isEditing && currentPage === nbPage - 1 }">
-                <wwObject v-bind="$parent.content.paginatorNext" v-if="$parent.content.paginatorNext"></wwObject>
+            <li :class="{ 'hide-icon': !$parent.isEditing && currentPage === nbPage - 1 }" @click="next">
+                <wwObject v-if="$parent.content.paginatorNext" v-bind="$parent.content.paginatorNext"></wwObject>
             </li>
         </ul>
     </nav>
@@ -84,23 +84,6 @@ export default {
             return navigation;
         },
     },
-    methods: {
-        goTo(index) {
-            if (index !== -1 && index !== this.currentPage) {
-                this.$parent.start = index * this.$parent.content.maxItems;
-            }
-        },
-        prev() {
-            if (this.currentPage > 0) {
-                this.goTo(this.currentPage - 1);
-            }
-        },
-        next() {
-            if (this.currentPage < this.nbPage - 1) {
-                this.goTo(this.currentPage + 1);
-            }
-        },
-    },
     /* wwEditor:start */
     async mounted() {
         if (this.$parent.wwEditorState.isACopy) {
@@ -120,6 +103,23 @@ export default {
                 paginatorNext,
             });
         }
+    },
+    methods: {
+        goTo(index) {
+            if (index !== -1 && index !== this.currentPage) {
+                this.$parent.start = index * this.$parent.content.maxItems;
+            }
+        },
+        prev() {
+            if (this.currentPage > 0) {
+                this.goTo(this.currentPage - 1);
+            }
+        },
+        next() {
+            if (this.currentPage < this.nbPage - 1) {
+                this.goTo(this.currentPage + 1);
+            }
+        },
     },
     /* wwEditor:end */
 };
