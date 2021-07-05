@@ -53,11 +53,11 @@ function getLengthInUnit(content) {
     };
 }
 
-function getLabel(content) {
-    if (content.type === 'columns') return { en: 'Columns', fr: 'Colonnes' };
-    if (content.type === 'rows') return { en: 'Rows', fr: 'Lignes' };
-    return { en: 'Mosaic', fr: 'Mosaïque' };
-}
+// function getLabel(content) {
+//     if (content.type === 'columns') return { en: 'Columns', fr: 'Colonnes' };
+//     if (content.type === 'rows') return { en: 'Rows', fr: 'Lignes' };
+//     return { en: 'Mosaic', fr: 'Mosaïque' };
+// }
 
 function getQuickSections(content) {
     if (content.type === 'columns') return ['type', 'presets'];
@@ -96,8 +96,8 @@ function getPresets(content) {
     };
 }
 
-export function getConfiguration(content, bindedProps) {
-    const isBinded = bindedProps && bindedProps.children;
+export function getConfiguration(content, boundProps) {
+    const isBound = boundProps && boundProps.children;
     return {
         // label: getLabel(content),
         menuOptions: {
@@ -113,7 +113,7 @@ export function getConfiguration(content, bindedProps) {
                 type: 'BigIconRadioGroup',
                 options: {
                     choices: [
-                        ...(isBinded ? [] : [{ icon: 'type-columns', value: 'columns', label: 'Columns' }]),
+                        ...(isBound ? [] : [{ icon: 'type-columns', value: 'columns', label: 'Columns' }]),
                         { icon: 'type-rows', value: 'rows', label: 'Rows' },
                         { icon: 'type-mosaic', value: 'mosaic', label: 'Mosaic' },
                     ],

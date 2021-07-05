@@ -62,7 +62,7 @@
                         <div v-if="showLength" class="ww-columns__units">
                             {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
                         </div>
-                        <div class="ww-columns__border" :class="{ '-binded': isBinded }"></div>
+                        <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
                     </template>
                     <!-- wwEditor:end -->
                 </wwLayoutItem>
@@ -79,7 +79,7 @@
                     @mouseleave="isHover = false"
                 ></wwEditorIcon>
             </div>
-            <div class="ww-columns__border" :class="{ '-binded': isBinded }"></div>
+            <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
         </template>
 
         <!-- wwEditor:end -->
@@ -111,8 +111,8 @@ export default {
         isHover: false,
         /* wwEditor:end */
     },
-    wwEditorConfiguration({ content, bindedProps }) {
-        return getConfiguration(content, bindedProps);
+    wwEditorConfiguration({ content, boundProps }) {
+        return getConfiguration(content, boundProps);
     },
     props: {
         content: { type: Object, required: true },
@@ -147,7 +147,7 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
-        isBinded() {
+        isBound() {
             /* wwEditor:start */
             return this.wwEditorState.boundProps && this.wwEditorState.boundProps.children;
             /* wwEditor:end */
@@ -280,9 +280,9 @@ export default {
                 iframe.classList.remove('ww-stop-event');
             }
         },
-        isBinded(isBinded, wasBinded) {
-            if (isBinded !== wasBinded) {
-                if (isBinded) {
+        isBound(isBound, wasBound) {
+            if (isBound !== wasBound) {
+                if (isBound) {
                     const update = {};
                     if (this.content.children.length) {
                         update.grid = [this.content.grid[0] || 1];
@@ -368,7 +368,7 @@ export default {
             return isFlex ? '1' : 'unset';
         },
         getGridAt(index, grid) {
-            index = this.isBinded ? 0 : index;
+            index = this.isBound ? 0 : index;
             grid = grid || this.content.grid;
             if (!grid) return 1;
             if (index >= grid.length) {
@@ -378,7 +378,7 @@ export default {
             }
         },
         fit(list, grid) {
-            if (this.isBinded) return;
+            if (this.isBound) return;
             if (this.content.type !== 'columns') return;
             const totalGrid = list.reduce((total, item, i) => total + this.getGridAt(i) || 0, 0);
             const lengthInUnit = this.content.lengthInUnit;
@@ -549,7 +549,7 @@ export default {
                     break;
                 }
                 case 'two-columns-mosaic': {
-                    if (this.isBinded) {
+                    if (this.isBound) {
                         this.$emit('update:content', { grid: [6], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
@@ -563,7 +563,7 @@ export default {
                     break;
                 }
                 case 'three-columns-mosaic': {
-                    if (this.isBinded) {
+                    if (this.isBound) {
                         this.$emit('update:content', { grid: [4], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
@@ -577,7 +577,7 @@ export default {
                     break;
                 }
                 case 'four-columns-mosaic': {
-                    if (this.isBinded) {
+                    if (this.isBound) {
                         this.$emit('update:content', { grid: [3], lengthInUnit: 12 });
                     } else {
                         let children = [...this.content.children];
@@ -591,7 +591,7 @@ export default {
                     break;
                 }
                 case 'five-columns-mosaic': {
-                    if (this.isBinded) {
+                    if (this.isBound) {
                         this.$emit('update:content', { grid: [4], lengthInUnit: 20 });
                     } else {
                         let children = [...this.content.children];
@@ -608,7 +608,7 @@ export default {
         },
         fixGrid() {
             if (this.content.type === 'rows') return;
-            if (this.isBinded) {
+            if (this.isBound) {
                 if (this.content.grid.length !== 1) {
                     const grid = this.content.grid.length === 0 ? [this.content.lengthInUnit] : [this.content.grid[0]];
                     this.$emit('update:content:effect', { grid });
@@ -659,7 +659,7 @@ export default {
             } else {
                 newGridValue = Math.min(newGridValue, this.content.lengthInUnit);
                 this.setGridValue({
-                    [this.isBinded ? 0 : this.dragingIndex]: newGridValue,
+                    [this.isBound ? 0 : this.dragingIndex]: newGridValue,
                 });
             }
         },
@@ -703,7 +703,7 @@ export default {
             }
             & > .ww-columns__border {
                 border: 1px dashed var(--ww-color-blue-500);
-                &.-binded {
+                &.-bound {
                     border-color: var(--ww-color-purple-500);
                 }
                 display: block;
@@ -796,7 +796,7 @@ export default {
         &:hover {
             & > .ww-columns__border {
                 border: 1px solid var(--ww-color-blue-500);
-                &.-binded {
+                &.-bound {
                     border-color: var(--ww-color-purple-500);
                 }
                 display: block;
