@@ -1,6 +1,11 @@
 {
     "name": "ww-columns",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/weweb-assets/ww-columns"
+    },
     "version": "3.0.0",
+    "license": "MIT",
     "scripts": {
         "build": "weweb build",
         "serve": "weweb serve"

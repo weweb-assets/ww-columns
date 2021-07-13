@@ -81,7 +81,6 @@
             </div>
             <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
         </template>
-
         <!-- wwEditor:end -->
     </div>
 </template>
@@ -106,10 +105,6 @@ export default {
 
         maxItems: wwLib.responsive(50),
         pagination: wwLib.responsive(null),
-
-        /* wwEditor:start */
-        isHover: false,
-        /* wwEditor:end */
     },
     wwEditorConfiguration({ content, boundProps }) {
         return getConfiguration(content, boundProps);
@@ -134,6 +129,9 @@ export default {
             wwObjectFlex: this.getWwObjectFlex(),
             direction: this.getDirection(),
             inheritFromElement: this.getInheritFromElement(),
+            /* wwEditor:start */
+            isHover: false,
+            /* wwEditor:end */
         };
     },
     computed: {
