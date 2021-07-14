@@ -104,6 +104,7 @@ export default {
             });
         }
     },
+    /* wwEditor:end */
     methods: {
         goTo(index) {
             if (index !== -1 && index !== this.currentPage) {
@@ -121,7 +122,6 @@ export default {
             }
         },
     },
-    /* wwEditor:end */
 };
 </script>
 
