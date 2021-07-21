@@ -1,5 +1,8 @@
 {
     "componentPath": "./src/wwElement.vue",
+    "options": {
+        "lazyHydrate": true
+    },
     "editor": {
         "label": { "en": "Columns", "fr": "Colonnes" },
         "otherOptions": {
