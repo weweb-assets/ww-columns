@@ -1,17 +1,12 @@
 <template>
     <div class="ww-columns" :class="{ editing: isEditing, empty: isEmpty }">
-        <Paginator v-if="content.pagination === 'top'" class="paginator"></Paginator>
         <wwLayout
             class="ww-columns__dropzone"
             path="children"
             :direction="direction"
             :style="layoutStyle"
-            :start="start"
-            :pagination="!!content.pagination"
-            :max="content.maxItems"
             :inherit-from-element="inheritFromElement"
             ww-responsive="wwLayout"
-            @update:total="total = $event"
             @update:list="update"
         >
             <template #default="{ item, index }">
@@ -68,7 +63,6 @@
                 </wwLayoutItem>
             </template>
         </wwLayout>
-        <Paginator v-if="content.pagination === 'bottom'" class="paginator"></Paginator>
         <!-- wwEditor:start -->
         <template v-if="isEditing">
             <div class="ww-columns__menu">
@@ -86,11 +80,9 @@
 </template>
 
 <script>
-import Paginator from './Paginator.vue';
 import { getConfiguration } from './config.js';
 
 export default {
-    components: { Paginator },
     wwDefaultContent: {
         children: [],
 
@@ -102,9 +94,6 @@ export default {
         justifyContent: wwLib.responsive('center'),
         alignItems: wwLib.responsive('stretch'),
         grid: wwLib.responsive([]),
-
-        maxItems: wwLib.responsive(50),
-        pagination: wwLib.responsive(null),
     },
     wwEditorConfiguration({ content, boundProps }) {
         return getConfiguration(content, boundProps);
@@ -121,9 +110,6 @@ export default {
         return {
             dragingHandle: 'start',
             dragingIndex: -1,
-
-            start: 0,
-            total: 0,
 
             style: this.getStyle(),
             wwObjectFlex: this.getWwObjectFlex(),
@@ -185,11 +171,6 @@ export default {
             }
         },
         /* wwFront:end */
-        total(val, oldVal) {
-            if (val !== oldVal) {
-                this.start = 0;
-            }
-        },
 
         /* wwEditor:start */
         content(newContent, oldContent) {
@@ -208,37 +189,6 @@ export default {
                     grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
                 }
                 if (!_.isEqual(grid, newContent.grid)) this.$emit('update:content:effect', { grid });
-            }
-        },
-        'content.pagination'(isPaginated, wasPaginated) {
-            if (isPaginated !== wasPaginated) {
-                this.start = 0;
-            }
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-
-            clearTimeout(this.isPaginatedTimeout);
-            this.isPaginatedTimeout = setTimeout(() => {
-                if (!isPaginated) {
-                    this.$emit('update:content:effect', {
-                        paginatorText: null,
-                        paginatorPrev: null,
-                        paginatorNext: null,
-                    });
-                }
-
-                if (isPaginated && !wasPaginated && !this.content.maxItems) {
-                    this.$emit('update:content:effect', { maxItems: 20 });
-                }
-            }, 500);
-        },
-        'content.maxItems'(newVal, oldVal) {
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-            if (!newVal && oldVal && this.content.pagination) {
-                this.$emit('update:content:effect', { pagination: null });
             }
         },
         'content.type'(newVal, oldVal) {
@@ -676,9 +626,6 @@ export default {
 .ww-columns {
     position: relative;
     box-sizing: border-box;
-    .paginator {
-        margin: 0 auto;
-    }
     &__dropzone {
         display: flex;
         height: 100%;

@@ -144,28 +144,6 @@ export function getConfiguration(content, boundProps) {
         },
         settingsOptions: {
             ...getLengthInUnit(content),
-            maxItems: {
-                label: { en: 'Max number of items', fr: 'Nombre maximal' },
-                type: 'Number',
-                options: {
-                    nullable: true,
-                    min: 1,
-                    max: 100,
-                },
-            },
-            pagination: {
-                label: {
-                    en: 'Use pagination ?',
-                },
-                type: 'TextRadioGroup',
-                options: {
-                    choices: [
-                        { title: 'bottom', value: 'bottom', label: 'Bottom' },
-                        { title: 'top', value: 'top', label: 'Top' },
-                        { title: 'None', value: null, label: 'None' },
-                    ],
-                },
-            },
         },
     };
 }
