@@ -34,7 +34,13 @@
                         :ww-responsive="`wwobject-${index}`"
                     >
                         <!-- wwEditor:start -->
-                        <template v-if="isEditing && content.type !== 'rows'">
+                        <template
+                            v-if="
+                                isEditing &&
+                                content.type !== 'rows' &&
+                                (isHover || dragingIndex === index || showLength)
+                            "
+                        >
                             <wwDraggable
                                 v-if="content.type === 'columns' && index > 0"
                                 class="ww-columns__handle start"
