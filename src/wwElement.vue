@@ -26,45 +26,44 @@
                             /* wwEditor:end */
                         },
                     ]"
-                    :style="getItemStyle(item, index)"
-                    :ww-responsive="`index-${index}`"
                 >
                     <wwObject
                         v-bind="item"
                         class="ww-columns__object"
-                        :style="{ flex: wwObjectFlex }"
+                        :style="getItemStyle(item, index)"
                         :ww-responsive="`wwobject-${index}`"
-                    ></wwObject>
-                    <!-- wwEditor:start -->
-                    <template v-if="isEditing && content.type !== 'rows'">
-                        <wwDraggable
-                            v-if="content.type === 'columns' && index > 0"
-                            class="ww-columns__handle start"
-                            :class="{ active: isDraging }"
-                            data-is-ui
-                            @startDrag="startDrag($event, index, 'start')"
-                            @drag="drag($event)"
-                            @endDrag="endDrag($event)"
-                            @mouseenter="isHover = true"
-                            @mouseleave="isHover = false"
-                        />
-                        <wwDraggable
-                            v-if="content.type === 'mosaic'"
-                            class="ww-columns__handle end"
-                            :class="{ active: isDraging }"
-                            data-is-ui
-                            @startDrag="startDrag($event, index, 'end')"
-                            @drag="drag($event)"
-                            @endDrag="endDrag($event)"
-                            @mouseenter="isHover = true"
-                            @mouseleave="isHover = false"
-                        />
-                        <div v-if="showLength" class="ww-columns__units">
-                            {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
-                        </div>
-                        <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
-                    </template>
-                    <!-- wwEditor:end -->
+                    >
+                        <!-- wwEditor:start -->
+                        <template v-if="isEditing && content.type !== 'rows'">
+                            <wwDraggable
+                                v-if="content.type === 'columns' && index > 0"
+                                class="ww-columns__handle start"
+                                :class="{ active: isDraging }"
+                                data-is-ui
+                                @startDrag="startDrag($event, index, 'start')"
+                                @drag="drag($event)"
+                                @endDrag="endDrag($event)"
+                                @mouseenter="isHover = true"
+                                @mouseleave="isHover = false"
+                            />
+                            <wwDraggable
+                                v-if="content.type === 'mosaic'"
+                                class="ww-columns__handle end"
+                                :class="{ active: isDraging }"
+                                data-is-ui
+                                @startDrag="startDrag($event, index, 'end')"
+                                @drag="drag($event)"
+                                @endDrag="endDrag($event)"
+                                @mouseenter="isHover = true"
+                                @mouseleave="isHover = false"
+                            />
+                            <div v-if="showLength" class="ww-columns__units">
+                                {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
+                            </div>
+                            <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                        </template>
+                        <!-- wwEditor:end -->
+                    </wwObject>
                 </wwLayoutItem>
             </template>
         </wwLayout>
