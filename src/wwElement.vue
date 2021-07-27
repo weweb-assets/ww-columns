@@ -303,8 +303,8 @@ export default {
         getItemStyle(item, index) {
             const style = {
                 '--display': 'block',
-                marginTop: 'unset',
-                marginLeft: 'unset',
+                marginTop: null,
+                marginLeft: null,
                 flexShrink: 'unset',
                 justifyContent: '',
                 width: 'unset',
