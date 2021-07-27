@@ -676,11 +676,6 @@ export default {
     .paginator {
         margin: 0 auto;
     }
-    &__dropzone {
-        display: flex;
-        height: 100%;
-        width: 100%;
-    }
     &__item {
         display: var(--display);
         position: relative;
