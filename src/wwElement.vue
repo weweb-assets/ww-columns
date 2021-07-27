@@ -36,7 +36,7 @@
                         <!-- wwEditor:start -->
                         <template v-if="isEditing && content.type !== 'rows'">
                             <wwDraggable
-                                v-if="content.type === 'columns' && index > 0 && isHover"
+                                v-if="content.type === 'columns' && index > 0 && (isHover || isDraging)"
                                 class="ww-columns__handle start"
                                 :class="{ active: isDraging }"
                                 data-is-ui
@@ -47,7 +47,7 @@
                                 @mouseleave="previewLength = false"
                             />
                             <wwDraggable
-                                v-if="content.type === 'mosaic' && isHover"
+                                v-if="content.type === 'mosaic' && (isHover || isDraging)"
                                 class="ww-columns__handle end"
                                 :class="{ active: isDraging }"
                                 data-is-ui
@@ -60,7 +60,11 @@
                             <div v-if="showLength" class="ww-columns__units">
                                 {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
                             </div>
-                            <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                            <div
+                                class="ww-columns__border"
+                                :class="{ '-bound': isBound }"
+                                v-show="isHover || isDraging"
+                            ></div>
                         </template>
                         <!-- wwEditor:end -->
                     </wwObject>
@@ -730,7 +734,7 @@ export default {
         left: 0;
         right: 0;
         bottom: 0;
-        display: none;
+        border: 1px solid var(--ww-color-blue-500);
         pointer-events: none;
         z-index: 10;
     }
