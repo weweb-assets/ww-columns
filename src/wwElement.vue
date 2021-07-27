@@ -1,5 +1,5 @@
 <template>
-    <div class="ww-columns" :class="{ editing: isEditing, empty: isEmpty }">
+    <div class="ww-columns" :class="{ editing: isEditing, empty: isEmpty }" v-bind="hoverListeners">
         <Paginator v-if="content.pagination === 'top'" class="paginator"></Paginator>
         <wwLayout
             class="ww-columns__dropzone"
@@ -34,34 +34,28 @@
                         :ww-responsive="`wwobject-${index}`"
                     >
                         <!-- wwEditor:start -->
-                        <template
-                            v-if="
-                                isEditing &&
-                                content.type !== 'rows' &&
-                                (isHover || dragingIndex === index || showLength)
-                            "
-                        >
+                        <template v-if="isEditing && content.type !== 'rows'">
                             <wwDraggable
-                                v-if="content.type === 'columns' && index > 0"
+                                v-if="content.type === 'columns' && index > 0 && isHover"
                                 class="ww-columns__handle start"
                                 :class="{ active: isDraging }"
                                 data-is-ui
                                 @startDrag="startDrag($event, index, 'start')"
                                 @drag="drag($event)"
                                 @endDrag="endDrag($event)"
-                                @mouseenter="isHover = true"
-                                @mouseleave="isHover = false"
+                                @mouseenter="previewLength = true"
+                                @mouseleave="previewLength = false"
                             />
                             <wwDraggable
-                                v-if="content.type === 'mosaic'"
+                                v-if="content.type === 'mosaic' && isHover"
                                 class="ww-columns__handle end"
                                 :class="{ active: isDraging }"
                                 data-is-ui
                                 @startDrag="startDrag($event, index, 'end')"
                                 @drag="drag($event)"
                                 @endDrag="endDrag($event)"
-                                @mouseenter="isHover = true"
-                                @mouseleave="isHover = false"
+                                @mouseenter="previewLength = true"
+                                @mouseleave="previewLength = false"
                             />
                             <div v-if="showLength" class="ww-columns__units">
                                 {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
@@ -80,8 +74,8 @@
                 <wwEditorIcon
                     small
                     name="two-columns"
-                    @mouseenter="isHover = true"
-                    @mouseleave="isHover = false"
+                    @mouseenter="previewLength = true"
+                    @mouseleave="previewLength = false"
                 ></wwEditorIcon>
             </div>
             <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
@@ -134,8 +128,18 @@ export default {
             wwObjectFlex: this.getWwObjectFlex(),
             direction: this.getDirection(),
             inheritFromElement: this.getInheritFromElement(),
+
+            hoverListeners: {
+                onMouseenter: () => {
+                    this.isHover = true;
+                },
+                onMouseleave: () => {
+                    this.isHover = false;
+                },
+            },
             /* wwEditor:start */
             isHover: false,
+            previewLength: false,
             /* wwEditor:end */
         };
     },
@@ -169,7 +173,7 @@ export default {
             return this.dragingIndex >= 0;
         },
         showLength() {
-            return this.isDraging || this.isHover;
+            return this.isDraging || this.previewLength;
         },
         /* wwEditor:end */
         layoutStyle() {
