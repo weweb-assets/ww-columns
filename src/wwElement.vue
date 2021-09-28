@@ -80,23 +80,13 @@
 </template>
 
 <script>
-import { getConfiguration } from './config.js';
-
 export default {
     wwDefaultContent: {
-        children: [],
-
-        type: wwLib.responsive('columns'),
-        lengthInUnit: wwLib.responsive(12),
-
         reverse: wwLib.responsive(false),
         pushLast: wwLib.responsive(false),
         justifyContent: wwLib.responsive('center'),
         alignItems: wwLib.responsive('stretch'),
-        grid: wwLib.responsive([]),
-    },
-    wwEditorConfiguration({ content, boundProps }) {
-        return getConfiguration(content, boundProps);
+        // grid: wwLib.responsive([]),
     },
     props: {
         content: { type: Object, required: true },
@@ -553,6 +543,9 @@ export default {
                     break;
                 }
             }
+        },
+        async setGridSystem(system) {
+            this.$emit('update:content', { lengthInUnit: system === 'percent' ? 100 : 12 });
         },
         fixGrid() {
             if (this.content.type === 'rows') return;
