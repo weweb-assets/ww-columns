@@ -81,13 +81,6 @@
 
 <script>
 export default {
-    wwDefaultContent: {
-        reverse: wwLib.responsive(false),
-        pushLast: wwLib.responsive(false),
-        justifyContent: wwLib.responsive('center'),
-        alignItems: wwLib.responsive('stretch'),
-        // grid: wwLib.responsive([]),
-    },
     props: {
         content: { type: Object, required: true },
         /* wwEditor:start */
