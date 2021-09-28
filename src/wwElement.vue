@@ -32,7 +32,7 @@
                     ></wwObject>
                     <!-- wwEditor:start -->
                     <template v-if="isEditing && content.type !== 'rows'">
-                        <wwDraggable
+                        <wwEditorDraggable
                             v-if="content.type === 'columns' && index > 0"
                             class="ww-columns__handle start"
                             :class="{ active: isDraging }"
@@ -43,7 +43,7 @@
                             @mouseenter="isHover = true"
                             @mouseleave="isHover = false"
                         />
-                        <wwDraggable
+                        <wwEditorDraggable
                             v-if="content.type === 'mosaic'"
                             class="ww-columns__handle end"
                             :class="{ active: isDraging }"
