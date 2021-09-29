@@ -156,29 +156,12 @@ export default {
         /* wwFront:end */
 
         /* wwEditor:start */
-        content: {
-            deep: true,
-            handler: (newContent, oldContent) => {
-                if (this.wwEditorState.isACopy) {
-                    return;
-                }
-                if (
-                    (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
-                    newContent.type !== oldContent.type ||
-                    (!_.isEqual(newContent.grid, oldContent.grid) && !this.isDraging)
-                ) {
-                    let grid = [...newContent.grid];
-                    if (this.content.type === 'columns') {
-                        grid = this.fit(newContent.children, grid);
-                    } else {
-                        grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
-                    }
-                    if (!_.isEqual(grid, newContent.grid)) this.$emit('update:content:effect', { grid });
-                }
-            },
+        'content.lengthInUnit'(newVal, oldVal) {
+            if (newVal && newVal !== oldVal) this.updateGrid();
         },
         'content.type'(newVal, oldVal) {
             if (newVal !== oldVal) {
+                this.updateGrid();
                 this.style = this.getStyle();
                 this.wwObjectFlex = this.getWwObjectFlex();
                 this.direction = this.getDirection();
@@ -196,12 +179,13 @@ export default {
                 this.wwObjectFlex = this.getWwObjectFlex();
             }
         },
-        'content.grid'() {
+        'content.grid'(newVal, oldVal) {
             if (this.wwEditorState.isACopy) {
                 return;
             }
             if (!this.isDraging) {
-                this.fixGrid();
+                if (!_.isEqual(newVal, oldVal)) this.updateGrid();
+                else this.fixGrid();
             }
         },
         isDraging(isDraging) {
@@ -389,6 +373,18 @@ export default {
             return list;
         },
         /* wwEditor:start */
+        updateGrid() {
+            if (this.wwEditorState.isACopy) {
+                return;
+            }
+            let grid = [...this.content.grid];
+            if (this.content.type === 'columns') {
+                grid = this.fit(this.content.children, grid);
+            } else {
+                grid = grid.map(item => Math.min(item, this.content.lengthInUnit));
+            }
+            if (!_.isEqual(grid, this.content.grid)) this.$emit('update:content:effect', { grid });
+        },
         async createContainer(children = []) {
             return await wwLib.createElement(
                 'ww-flexbox',
