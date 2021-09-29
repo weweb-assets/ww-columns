@@ -149,6 +149,7 @@ export default {
         },
         lengthInUnit: {
             hidden: content => content.type === 'rows' || content.lengthInUnit === 100,
+            label: { en: 'Units count' },
             type: 'Number',
             section: 'settings',
             responsive: true,
