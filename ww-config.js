@@ -150,6 +150,7 @@ export default {
         lengthInUnit: {
             hidden: content => content.type === 'rows' || content.lengthInUnit === 100,
             type: 'Number',
+            section: 'settings',
             responsive: true,
             defaultValue: 12,
         },

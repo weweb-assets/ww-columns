@@ -156,24 +156,26 @@ export default {
         /* wwFront:end */
 
         /* wwEditor:start */
-        content(newContent, oldContent) {
-            console.log('content');
-            if (this.wwEditorState.isACopy) {
-                return;
-            }
-            if (
-                (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
-                newContent.type !== oldContent.type ||
-                (!_.isEqual(newContent.grid, oldContent.grid) && !this.isDraging)
-            ) {
-                let grid = [...newContent.grid];
-                if (this.content.type === 'columns') {
-                    grid = this.fit(newContent.children, grid);
-                } else {
-                    grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
+        content: {
+            deep: true,
+            handler: (newContent, oldContent) => {
+                if (this.wwEditorState.isACopy) {
+                    return;
                 }
-                if (!_.isEqual(grid, newContent.grid)) this.$emit('update:content:effect', { grid });
-            }
+                if (
+                    (newContent.lengthInUnit && newContent.lengthInUnit !== oldContent.lengthInUnit) ||
+                    newContent.type !== oldContent.type ||
+                    (!_.isEqual(newContent.grid, oldContent.grid) && !this.isDraging)
+                ) {
+                    let grid = [...newContent.grid];
+                    if (this.content.type === 'columns') {
+                        grid = this.fit(newContent.children, grid);
+                    } else {
+                        grid = grid.map(item => Math.min(item, newContent.lengthInUnit));
+                    }
+                    if (!_.isEqual(grid, newContent.grid)) this.$emit('update:content:effect', { grid });
+                }
+            },
         },
         'content.type'(newVal, oldVal) {
             if (newVal !== oldVal) {
