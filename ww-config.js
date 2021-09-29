@@ -148,7 +148,7 @@ export default {
             },
         },
         lengthInUnit: {
-            hidden: content => content.type === 'rows' || content.lengthInUnit !== 100,
+            hidden: content => content.type === 'rows' || content.lengthInUnit === 100,
             type: 'Number',
             responsive: true,
             defaultValue: 12,

@@ -157,6 +157,7 @@ export default {
 
         /* wwEditor:start */
         content(newContent, oldContent) {
+            console.log('content');
             if (this.wwEditorState.isACopy) {
                 return;
             }
