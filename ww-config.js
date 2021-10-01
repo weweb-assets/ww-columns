@@ -18,7 +18,6 @@ export default {
         },
         children: {
             bindable: 'repeatable',
-            section: 'settings',
             label: {
                 en: 'Items',
                 fr: 'Items',
