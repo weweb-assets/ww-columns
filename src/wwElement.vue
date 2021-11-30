@@ -142,6 +142,12 @@ export default {
                 ...this.style,
             };
         },
+        children() {
+            if (!this.content.children || !Array.isArray(this.content.children)) {
+                return [];
+            }
+            return this.content.children;
+        },
     },
     watch: {
         /* wwFront:start */
@@ -202,9 +208,9 @@ export default {
             if (isBound !== wasBound) {
                 if (isBound) {
                     const update = {};
-                    if (this.content.children.length) {
+                    if (this.children.length) {
                         update.grid = [this.content.grid[0] || 1];
-                        update.children = [this.content.children[0]];
+                        update.children = [this.children[0]];
                     }
                     if (this.content.type === 'columns') {
                         update.type = 'mosaic';
@@ -233,14 +239,14 @@ export default {
 
             //Reverse
             if (this.content.reverse) {
-                style.order = this.content.children.length - 1 - index;
+                style.order = this.children.length - 1 - index;
             } else {
                 style.order = index;
             }
 
             //Push last
             if (this.content.pushLast) {
-                const push = !this.content.reverse ? index === this.content.children.length - 1 : index === 0;
+                const push = !this.content.reverse ? index === this.children.length - 1 : index === 0;
                 if (push) {
                     if (this.content.direction === 'column') {
                         style.marginTop = 'auto';
@@ -379,7 +385,7 @@ export default {
             }
             let grid = [...this.content.grid];
             if (this.content.type === 'columns') {
-                grid = this.fit(this.content.children, grid);
+                grid = this.fit(this.children, grid);
             } else {
                 grid = grid.map(item => Math.min(item, this.content.lengthInUnit));
             }
@@ -407,7 +413,7 @@ export default {
         async setPreset(preset) {
             switch (preset) {
                 case 'two-columns': {
-                    let children = this.content.children.slice(0, 2);
+                    let children = this.children.slice(0, 2);
                     for (let i = children.length; i < 2; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -416,7 +422,7 @@ export default {
                     break;
                 }
                 case 'two-columns-small-left': {
-                    let children = this.content.children.slice(0, 2);
+                    let children = this.children.slice(0, 2);
                     for (let i = children.length; i < 2; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -425,7 +431,7 @@ export default {
                     break;
                 }
                 case 'two-columns-small-right': {
-                    let children = this.content.children.slice(0, 2);
+                    let children = this.children.slice(0, 2);
                     for (let i = children.length; i < 2; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -434,7 +440,7 @@ export default {
                     break;
                 }
                 case 'three-columns': {
-                    let children = this.content.children.slice(0, 3);
+                    let children = this.children.slice(0, 3);
                     for (let i = children.length; i < 3; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -443,7 +449,7 @@ export default {
                     break;
                 }
                 case 'three-columns-big-middle': {
-                    let children = this.content.children.slice(0, 3);
+                    let children = this.children.slice(0, 3);
                     for (let i = children.length; i < 3; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -452,7 +458,7 @@ export default {
                     break;
                 }
                 case 'four-columns': {
-                    let children = this.content.children.slice(0, 4);
+                    let children = this.children.slice(0, 4);
                     for (let i = children.length; i < 4; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -461,7 +467,7 @@ export default {
                     break;
                 }
                 case 'five-columns': {
-                    let children = this.content.children.slice(0, 5);
+                    let children = this.children.slice(0, 5);
                     for (let i = children.length; i < 5; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -470,7 +476,7 @@ export default {
                     break;
                 }
                 case 'six-columns': {
-                    let children = this.content.children.slice(0, 6);
+                    let children = this.children.slice(0, 6);
                     for (let i = children.length; i < 6; i++) {
                         const container = await this.createContainer();
                         children.push(container);
@@ -482,7 +488,7 @@ export default {
                     if (this.isBound) {
                         this.$emit('update:content', { grid: [6], lengthInUnit: 12 });
                     } else {
-                        let children = [...this.content.children];
+                        let children = [...this.children];
                         for (let i = children.length; i < 2; i++) {
                             const container = await this.createContainer();
                             children.push(container);
@@ -496,7 +502,7 @@ export default {
                     if (this.isBound) {
                         this.$emit('update:content', { grid: [4], lengthInUnit: 12 });
                     } else {
-                        let children = [...this.content.children];
+                        let children = [...this.children];
                         for (let i = children.length; i < 3; i++) {
                             const container = await this.createContainer();
                             children.push(container);
@@ -510,7 +516,7 @@ export default {
                     if (this.isBound) {
                         this.$emit('update:content', { grid: [3], lengthInUnit: 12 });
                     } else {
-                        let children = [...this.content.children];
+                        let children = [...this.children];
                         for (let i = children.length; i < 4; i++) {
                             const container = await this.createContainer();
                             children.push(container);
@@ -524,7 +530,7 @@ export default {
                     if (this.isBound) {
                         this.$emit('update:content', { grid: [4], lengthInUnit: 20 });
                     } else {
-                        let children = [...this.content.children];
+                        let children = [...this.children];
                         for (let i = children.length; i < 5; i++) {
                             const container = await this.createContainer();
                             children.push(container);
@@ -548,13 +554,13 @@ export default {
                     return;
                 }
             } else {
-                if (this.content.grid.length !== this.content.children.length) {
-                    let grid = this.content.grid.slice(0, this.content.children.length);
-                    for (let i = grid.length; i < this.content.children.length; i++) {
+                if (this.content.grid.length !== this.children.length) {
+                    let grid = this.content.grid.slice(0, this.children.length);
+                    for (let i = grid.length; i < this.children.length; i++) {
                         grid.unshift(grid[0]);
                     }
                     if (this.content.type === 'columns') {
-                        grid = this.fit(this.content.children, grid);
+                        grid = this.fit(this.children, grid);
                     }
                     this.$emit('update:content:effect', { grid });
                     return;
