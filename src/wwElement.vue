@@ -407,7 +407,8 @@ export default {
                             padding: '8px',
                         },
                     },
-                }
+                },
+                this.wwFrontState.sectionId
             );
         },
         async setPreset(preset) {
