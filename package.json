@@ -4,7 +4,7 @@
         "type": "git",
         "url": "https://github.com/weweb-assets/ww-columns"
     },
-    "version": "3.1.1",
+    "version": "3.2.0",
     "license": "MIT",
     "scripts": {
         "build": "weweb build",
