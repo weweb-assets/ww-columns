@@ -408,7 +408,8 @@ export default {
                         },
                     },
                 },
-                this.wwFrontState.sectionId
+                this.wwFrontState.sectionId,
+                true
             );
         },
         async setPreset(preset) {
