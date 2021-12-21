@@ -98,7 +98,7 @@ export default {
             defaultValue: 'center',
         },
         alignItems: {
-            label: { en: 'Alignement' },
+            label: { en: 'Alignment' },
             type: 'TextRadioGroup',
             hidden: content => content.type !== 'mosaic',
             options: {
