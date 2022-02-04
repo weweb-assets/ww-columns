@@ -63,19 +63,6 @@
                 </wwLayoutItem>
             </template>
         </wwLayout>
-        <!-- wwEditor:start -->
-        <template v-if="isEditing">
-            <div class="ww-columns__menu">
-                <wwEditorIcon
-                    small
-                    name="two-columns"
-                    @mouseenter="isHover = true"
-                    @mouseleave="isHover = false"
-                ></wwEditorIcon>
-            </div>
-            <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
-        </template>
-        <!-- wwEditor:end -->
     </div>
 </template>
 
@@ -651,12 +638,6 @@ export default {
     }
 
     /* wwEditor:start */
-    &:hover {
-        > .ww-columns__menu {
-            opacity: 1;
-            pointer-events: all;
-        }
-    }
     &__border {
         position: absolute;
         top: 0;
@@ -667,31 +648,6 @@ export default {
         pointer-events: none;
         z-index: 10;
     }
-    &__menu {
-        pointer-events: auto;
-        opacity: 0;
-        pointer-events: none;
-        display: flex;
-        position: absolute;
-        border-radius: 100%;
-        padding: var(--ww-spacing-01);
-        transition: opacity 0.2s ease;
-        z-index: 11;
-        cursor: pointer;
-        background-color: var(--ww-color-blue-500);
-        color: white;
-        justify-content: center;
-        align-items: center;
-        left: 0;
-        top: 0;
-        transform: translate(-50%, -50%);
-        transition: transform 0.3s ease;
-        &:hover {
-            transform: translate(-50%, -50%) scale(1.3);
-            opacity: 1;
-        }
-    }
-
     &__handle {
         position: absolute;
         background: white;
@@ -738,10 +694,6 @@ export default {
                     border-color: var(--ww-color-purple-500);
                 }
                 display: block;
-            }
-            > .ww-columns__menu {
-                opacity: 1;
-                pointer-events: all;
             }
         }
 

@@ -9,6 +9,9 @@ export default {
                 bind: [{ prop: 'children', label: { en: 'Repeat enclosed items' } }],
             },
         },
+        bubble: {
+            icon: 'two-columns',
+        },
     },
     properties: {
         grid: {
