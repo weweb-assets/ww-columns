@@ -10,8 +10,9 @@
             @update:list="update"
         >
             <template #default="{ item, index }">
-                <wwLayoutItem
-                    class="ww-columns__item"
+                <div
+                    class="ww-columns__column"
+                    :ww-responsive="`index-${index}`"
                     :class="[
                         {
                             editing: isEditing,
@@ -21,15 +22,17 @@
                             /* wwEditor:end */
                         },
                     ]"
-                    :style="getItemStyle(item, index)"
-                    :ww-responsive="`index-${index}`"
+                    :style="getItemStyle(index)"
                 >
-                    <wwObject
-                        v-bind="item"
-                        class="ww-columns__object"
-                        :style="{ flex: wwObjectFlex }"
-                        :ww-responsive="`wwobject-${index}`"
-                    ></wwObject>
+                    <wwLayoutItem class="ww-columns__item">
+                        <wwObject
+                            v-bind="item"
+                            class="ww-columns__object"
+                            :extra-style="{ flex: getWwObjectFlex() }"
+                            :ww-responsive="`wwobject-${index}`"
+                        ></wwObject>
+                    </wwLayoutItem>
+
                     <!-- wwEditor:start -->
                     <template v-if="isEditing && content.type !== 'rows'">
                         <wwEditorDraggable
@@ -60,7 +63,7 @@
                         <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
                     </template>
                     <!-- wwEditor:end -->
-                </wwLayoutItem>
+                </div>
             </template>
         </wwLayout>
     </div>
@@ -214,14 +217,11 @@ export default {
         /* wwEditor:end */
     },
     methods: {
-        getItemStyle(item, index) {
+        getItemStyle(index) {
             const style = {
                 '--display': 'block',
-                marginTop: 'unset',
-                marginLeft: 'unset',
                 flexShrink: 'unset',
                 justifyContent: '',
-                width: 'unset',
             };
 
             //Reverse
@@ -611,10 +611,10 @@ export default {
         height: 100%;
         width: 100%;
     }
-    &__item {
-        display: var(--display);
+    &__column {
         position: relative;
-        box-sizing: border-box;
+
+        display: var(--display);
 
         /* wwEditor:start */
         .ww-columns__handle {
@@ -635,6 +635,10 @@ export default {
             }
         }
         /* wwEditor:end */
+    }
+    &__item {
+        position: relative;
+        box-sizing: border-box;
     }
 
     /* wwEditor:start */
