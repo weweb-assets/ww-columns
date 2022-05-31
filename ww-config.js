@@ -2,13 +2,6 @@ export default {
     editor: {
         label: { en: 'Columns', fr: 'Colonnes' },
         icon: 'two-columns',
-        menuOptions: {
-            quick: {
-                label: { en: 'Edit layout' },
-                sections: ['type', 'presets', 'justifyContent', 'alignItems'],
-                bind: [{ prop: 'children', label: { en: 'Repeat enclosed items' } }],
-            },
-        },
         bubble: {
             icon: 'two-columns',
         },
