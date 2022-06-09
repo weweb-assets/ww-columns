@@ -24,14 +24,12 @@
                     ]"
                     :style="getItemStyle(index)"
                 >
-                    <wwLayoutItem class="ww-columns__item">
-                        <wwObject
-                            v-bind="item"
-                            class="ww-columns__object"
-                            :extra-style="{ flex: getWwObjectFlex() }"
-                            :ww-responsive="`wwobject-${index}`"
-                        ></wwObject>
-                    </wwLayoutItem>
+                    <wwElement
+                        v-bind="item"
+                        class="ww-columns__object"
+                        :extra-style="{ flex: getWwObjectFlex() }"
+                        :ww-responsive="`wwobject-${index}`"
+                    ></wwElement>
 
                     <!-- wwEditor:start -->
                     <template v-if="isEditing && content.type !== 'rows'">
@@ -635,10 +633,6 @@ export default {
             }
         }
         /* wwEditor:end */
-    }
-    &__item {
-        position: relative;
-        box-sizing: border-box;
     }
 
     /* wwEditor:start */
