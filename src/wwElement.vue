@@ -15,11 +15,11 @@
                     :ww-responsive="`index-${index}`"
                     :class="[
                         {
-                            editing: isEditing,
-                            draging: dragingIndex === index,
                             /* wwEditor:start */
                             'show-length': showLength,
                             /* wwEditor:end */
+                            editing: isEditing,
+                            draging: dragingIndex === index,
                         },
                     ]"
                     :style="getItemStyle(index)"
