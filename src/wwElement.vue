@@ -27,7 +27,7 @@
                     <wwElement
                         v-bind="item"
                         class="ww-columns__object"
-                        :extra-style="{ flex: getWwObjectFlex() }"
+                        :extra-style="{ flexGrow: getWwObjectFlex() }"
                         :ww-responsive="`wwobject-${index}`"
                     ></wwElement>
 
