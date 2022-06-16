@@ -5,31 +5,31 @@
             path="children"
             :direction="direction"
             :style="layoutStyle"
-            :inherit-from-element="inheritFromElement"
             ww-responsive="wwLayout"
             @update:list="update"
         >
             <template #default="{ item, index }">
-                <wwLayoutItem
-                    class="ww-columns__item"
+                <div
+                    class="ww-columns__column"
+                    :ww-responsive="`index-${index}`"
                     :class="[
                         {
-                            editing: isEditing,
-                            draging: dragingIndex === index,
                             /* wwEditor:start */
                             'show-length': showLength,
                             /* wwEditor:end */
+                            editing: isEditing,
+                            draging: dragingIndex === index,
                         },
                     ]"
-                    :style="getItemStyle(item, index)"
-                    :ww-responsive="`index-${index}`"
+                    :style="getItemStyle(index)"
                 >
-                    <wwObject
+                    <wwElement
                         v-bind="item"
                         class="ww-columns__object"
-                        :style="{ flex: wwObjectFlex }"
+                        :extra-style="wwObjectFlex"
                         :ww-responsive="`wwobject-${index}`"
-                    ></wwObject>
+                    ></wwElement>
+
                     <!-- wwEditor:start -->
                     <template v-if="isEditing && content.type !== 'rows'">
                         <wwEditorDraggable
@@ -60,7 +60,7 @@
                         <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
                     </template>
                     <!-- wwEditor:end -->
-                </wwLayoutItem>
+                </div>
             </template>
         </wwLayout>
     </div>
@@ -82,9 +82,7 @@ export default {
             dragingIndex: -1,
 
             style: this.getStyle(),
-            wwObjectFlex: this.getWwObjectFlex(),
             direction: this.getDirection(),
-            inheritFromElement: this.getInheritFromElement(),
             /* wwEditor:start */
             isHover: false,
             /* wwEditor:end */
@@ -123,6 +121,10 @@ export default {
             return this.isDraging || this.isHover;
         },
         /* wwEditor:end */
+        wwObjectFlex() {
+            const isFlex = this.content.type !== 'mosaic' || this.content.alignItems === 'stretch';
+            return { flexGrow: isFlex ? '1' : 'unset' };
+        },
         layoutStyle() {
             return {
                 flexDirection: this.direction,
@@ -141,9 +143,7 @@ export default {
         screenSize(newVal, oldVal) {
             if (newVal !== oldVal) {
                 this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
                 this.direction = this.getDirection();
-                this.inheritFromElement = this.getInheritFromElement();
             }
         },
         /* wwFront:end */
@@ -156,9 +156,7 @@ export default {
             if (newVal !== oldVal) {
                 this.updateGrid();
                 this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
                 this.direction = this.getDirection();
-                this.inheritFromElement = this.getInheritFromElement();
             }
         },
         'content.justifyContent'(newVal, oldVal) {
@@ -169,7 +167,6 @@ export default {
         'content.alignItems'(newVal, oldVal) {
             if (newVal !== oldVal) {
                 this.style = this.getStyle();
-                this.wwObjectFlex = this.getWwObjectFlex();
             }
         },
         'content.grid'(newVal, oldVal) {
@@ -214,14 +211,11 @@ export default {
         /* wwEditor:end */
     },
     methods: {
-        getItemStyle(item, index) {
+        getItemStyle(index) {
             const style = {
                 '--display': 'block',
-                marginTop: 'unset',
-                marginLeft: 'unset',
                 flexShrink: 'unset',
                 justifyContent: '',
-                width: 'unset',
             };
 
             //Reverse
@@ -611,10 +605,10 @@ export default {
         height: 100%;
         width: 100%;
     }
-    &__item {
-        display: var(--display);
+    &__column {
         position: relative;
-        box-sizing: border-box;
+
+        display: var(--display);
 
         /* wwEditor:start */
         .ww-columns__handle {
