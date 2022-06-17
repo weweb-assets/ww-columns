@@ -601,10 +601,6 @@ export default {
     position: relative;
     box-sizing: border-box;
 
-    &__object {
-        width: 100%;
-    }
-
     &__dropzone {
         display: flex;
         height: 100%;
@@ -704,5 +700,13 @@ export default {
         }
     }
     /* wwEditor:end */
+}
+</style>
+
+<style lang="scss">
+.ww-columns {
+    &__object {
+        width: 100%;
+    }
 }
 </style>
