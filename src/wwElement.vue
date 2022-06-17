@@ -600,11 +600,17 @@ export default {
 .ww-columns {
     position: relative;
     box-sizing: border-box;
+
+    &__object {
+        width: 100%;
+    }
+
     &__dropzone {
         display: flex;
         height: 100%;
         width: 100%;
     }
+
     &__column {
         position: relative;
 
