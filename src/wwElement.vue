@@ -702,11 +702,3 @@ export default {
     /* wwEditor:end */
 }
 </style>
-
-<style lang="scss">
-.ww-columns {
-    &__object {
-        width: 100%;
-    }
-}
-</style>
