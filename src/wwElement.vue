@@ -122,8 +122,11 @@ export default {
         },
         /* wwEditor:end */
         wwObjectFlex() {
+            const style = {};
             const isFlex = this.content.type !== 'mosaic' || this.content.alignItems === 'stretch';
-            return { flexGrow: isFlex ? '1' : 'unset' };
+            style.flexGrow = isFlex ? '1' : 'unset';
+            if (this.content.type === 'columns') style.alignSelf = 'auto';
+            return style;
         },
         layoutStyle() {
             return {
