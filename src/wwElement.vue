@@ -216,7 +216,6 @@ export default {
     methods: {
         getItemStyle(index) {
             const style = {
-                '--display': 'block',
                 flexShrink: 'unset',
                 justifyContent: '',
             };
@@ -241,19 +240,17 @@ export default {
             }
 
             if (this.content.type !== 'rows') {
-                style['--display'] = 'flex';
-                style.flexDirection = 'column';
-                if (
-                    this.content.alignItems !== 'stretch' &&
-                    this.content.alignItems !== 'baseline' &&
-                    this.content.type === 'mosaic'
-                ) {
-                    style.justifyContent = this.content.alignItems;
-                }
-
                 const widthInUnit = this.getGridAt(index);
                 style.width = `calc(${widthInUnit} * 100% / ${this.content.lengthInUnit})`;
                 style.flexShrink = '0';
+            }
+
+            if (
+                this.content.type === 'mosaic' &&
+                this.content.alignItems !== 'stretch' &&
+                this.content.alignItems !== 'baseline'
+            ) {
+                style.justifyContent = this.content.alignItems;
             }
 
             return style;
@@ -612,8 +609,8 @@ export default {
 
     &__column {
         position: relative;
-
-        display: var(--display);
+        display: flex;
+        flex-direction: column;
 
         /* wwEditor:start */
         .ww-columns__handle {
