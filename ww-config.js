@@ -25,6 +25,13 @@ export default {
                 },
             },
             defaultValue: [],
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'array',
+                tooltip:
+                    'A collection of data in array format: \n\n `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
+            },
+            /* wwEditor:end */
         },
         type: {
             label: { en: 'Display type', fr: "Type d'affichage" },
