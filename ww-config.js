@@ -25,11 +25,18 @@ export default {
                 },
             },
             defaultValue: [],
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'array',
+             /* wwEditor:start */
+             bindingValidation: {
+                validations: [
+                    {
+                        type: 'array',
+                    },
+                    {
+                        type: 'object',
+                    },
+                ],
                 tooltip:
-                    'A collection of data in array format: \n\n `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
+                    'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
             },
             /* wwEditor:end */
         },
