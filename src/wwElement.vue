@@ -243,6 +243,8 @@ export default {
                 const widthInUnit = this.getGridAt(index);
                 style.width = `calc(${widthInUnit} * 100% / ${this.content.lengthInUnit})`;
                 style.flexShrink = '0';
+            } else {
+                style.width = `100%`;
             }
 
             if (
