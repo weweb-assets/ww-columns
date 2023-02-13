@@ -1,69 +1,68 @@
 <template>
-    <div class="ww-columns" :class="{ editing: isEditing, empty: isEmpty }">
-        <wwLayout
-            class="ww-columns__dropzone"
-            path="children"
-            :direction="direction"
-            :style="layoutStyle"
-            ww-responsive="wwLayout"
-            @update:list="update"
-        >
-            <template #default="{ item, index }">
-                <div
-                    class="ww-columns__column"
-                    :ww-responsive="`index-${index}`"
-                    :class="[
-                        {
-                            /* wwEditor:start */
-                            'show-length': showLength,
-                            /* wwEditor:end */
-                            editing: isEditing,
-                            draging: dragingIndex === index,
-                        },
-                    ]"
-                    :style="getItemStyle(index)"
-                >
-                    <wwElement
-                        v-bind="item"
-                        class="ww-columns__object"
-                        :extra-style="wwObjectFlex"
-                        :ww-responsive="`wwobject-${index}`"
-                    ></wwElement>
+    <wwLayout
+        class="ww-columns__dropzone"
+        path="children"
+        :class="{ editing: isEditing, empty: isEmpty }"
+        :direction="direction"
+        :style="layoutStyle"
+        ww-responsive="wwLayout"
+        @update:list="update"
+    >
+        <template #default="{ item, index }">
+            <div
+                class="ww-columns__column"
+                :ww-responsive="`index-${index}`"
+                :class="[
+                    {
+                        /* wwEditor:start */
+                        'show-length': showLength,
+                        /* wwEditor:end */
+                        editing: isEditing,
+                        draging: dragingIndex === index,
+                    },
+                ]"
+                :style="getItemStyle(index)"
+            >
+                <wwElement
+                    v-bind="item"
+                    class="ww-columns__object"
+                    :extra-style="wwObjectFlex"
+                    :ww-responsive="`wwobject-${index}`"
+                ></wwElement>
 
-                    <!-- wwEditor:start -->
-                    <template v-if="isEditing && content.type !== 'rows'">
-                        <wwEditorDraggable
-                            v-if="content.type === 'columns' && index > 0"
-                            class="ww-columns__handle start"
-                            :class="{ active: isDraging }"
-                            data-is-ui
-                            @startDrag="startDrag($event, index, 'start')"
-                            @drag="drag($event)"
-                            @endDrag="endDrag($event)"
-                            @mouseenter="isHover = true"
-                            @mouseleave="isHover = false"
-                        />
-                        <wwEditorDraggable
-                            v-if="content.type === 'mosaic'"
-                            class="ww-columns__handle end"
-                            :class="{ active: isDraging }"
-                            data-is-ui
-                            @startDrag="startDrag($event, index, 'end')"
-                            @drag="drag($event)"
-                            @endDrag="endDrag($event)"
-                            @mouseenter="isHover = true"
-                            @mouseleave="isHover = false"
-                        />
-                        <div v-if="showLength" class="ww-columns__units">
-                            {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
-                        </div>
-                        <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
-                    </template>
-                    <!-- wwEditor:end -->
-                </div>
-            </template>
-        </wwLayout>
-    </div>
+                <!-- wwEditor:start -->
+                <template v-if="isEditing && content.type !== 'rows'">
+                    <wwEditorDraggable
+                        v-if="content.type === 'columns' && index > 0"
+                        class="ww-columns__handle start"
+                        :class="{ active: isDraging }"
+                        data-is-ui
+                        @startDrag="startDrag($event, index, 'start')"
+                        @drag="drag($event)"
+                        @endDrag="endDrag($event)"
+                        @mouseenter="isHover = true"
+                        @mouseleave="isHover = false"
+                    />
+                    <wwEditorDraggable
+                        v-if="content.type === 'mosaic'"
+                        class="ww-columns__handle end"
+                        :class="{ active: isDraging }"
+                        data-is-ui
+                        @startDrag="startDrag($event, index, 'end')"
+                        @drag="drag($event)"
+                        @endDrag="endDrag($event)"
+                        @mouseenter="isHover = true"
+                        @mouseleave="isHover = false"
+                    />
+                    <div v-if="showLength" class="ww-columns__units">
+                        {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
+                    </div>
+                    <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                </template>
+                <!-- wwEditor:end -->
+            </div>
+        </template>
+    </wwLayout>
 </template>
 
 <script>
@@ -243,8 +242,6 @@ export default {
                 const widthInUnit = this.getGridAt(index);
                 style.width = `calc(${widthInUnit} * 100% / ${this.content.lengthInUnit})`;
                 style.flexShrink = '0';
-            } else {
-                style.width = `100%`;
             }
 
             if (
@@ -600,13 +597,8 @@ export default {
 
 <style lang="scss" scoped>
 .ww-columns {
-    position: relative;
-    box-sizing: border-box;
-
     &__dropzone {
         display: flex;
-        height: 100%;
-        width: 100%;
     }
 
     &__column {
