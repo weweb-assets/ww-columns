@@ -54,10 +54,10 @@
                         @mouseenter="isHover = true"
                         @mouseleave="isHover = false"
                     />
-                    <div v-if="showLength" class="ww-columns__units">
+                    <!-- <div v-if="showLength" class="ww-columns__units">
                         {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
-                    </div>
-                    <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                    </div> -->
+                    <!-- <div class="ww-columns__border" :class="{ '-bound': isBound }"></div> -->
                 </template>
                 <!-- wwEditor:end -->
             </div>
