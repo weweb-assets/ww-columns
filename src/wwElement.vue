@@ -31,7 +31,7 @@
                 ></wwElement>
 
                 <!-- wwEditor:start -->
-                <template v-if="isEditing && content.type !== 'rows'">
+                <!-- <template v-if="isEditing && content.type !== 'rows'">
                     <wwEditorDraggable
                         v-if="content.type === 'columns' && index > 0"
                         class="ww-columns__handle start"
@@ -54,11 +54,11 @@
                         @mouseenter="isHover = true"
                         @mouseleave="isHover = false"
                     />
-                    <!-- <div v-if="showLength" class="ww-columns__units">
+                    <div v-if="showLength" class="ww-columns__units">
                         {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
-                    </div> -->
-                    <!-- <div class="ww-columns__border" :class="{ '-bound': isBound }"></div> -->
-                </template>
+                    </div>
+                    <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                </template> -->
                 <!-- wwEditor:end -->
             </div>
         </template>
