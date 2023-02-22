@@ -197,7 +197,6 @@ export default {
                     const update = {};
                     if (this.children.length) {
                         update.grid = [this.content.grid[0] || 1];
-                        update.children = [this.children[0]];
                     }
                     if (this.content.type === 'columns') {
                         update.type = 'mosaic';
