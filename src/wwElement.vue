@@ -36,7 +36,6 @@
                             v-if="content.type === 'columns' && index > 0"
                             class="ww-columns__handle start"
                             :class="{ active: isDraging }"
-                            data-is-ui
                             @startDrag="startDrag($event, index, 'start')"
                             @drag="drag($event)"
                             @endDrag="endDrag($event)"
@@ -47,17 +46,16 @@
                             v-if="content.type === 'mosaic'"
                             class="ww-columns__handle end"
                             :class="{ active: isDraging }"
-                            data-is-ui
                             @startDrag="startDrag($event, index, 'end')"
                             @drag="drag($event)"
                             @endDrag="endDrag($event)"
                             @mouseenter="isHover = true"
                             @mouseleave="isHover = false"
                         />
-                        <div v-if="showLength" class="ww-columns__units">
+                        <div class="ww-columns__units">
                             {{ `${getGridAt(index)}${content.lengthInUnit === 100 ? '%' : ''}` }}
                         </div>
-                        <div class="ww-columns__border" :class="{ '-bound': isBound }"></div>
+                        <div class="ww-columns__border"></div>
                     </template>
                     <!-- wwEditor:end -->
                 </div>
@@ -615,20 +613,27 @@ export default {
 
         /* wwEditor:start */
         .ww-columns__handle {
-            display: none;
+            // display: none;
+            opacity: 0;
+            pointer-events: none;
         }
         &.editing:hover,
         &.editing.draging,
         &.editing.show-length {
             > .ww-columns__handle {
-                display: flex;
+                // display: flex;
+                opacity: 1;
+                pointer-events: initial;
             }
             & > .ww-columns__border {
-                border: 1px dashed var(--ww-color-blue-500);
-                &.-bound {
-                    border-color: var(--ww-color-purple-500);
-                }
-                display: block;
+                opacity: 1;
+            }
+        }
+        &.editing.show-length {
+            > .ww-columns__units {
+                // display: flex;
+                opacity: 1;
+                pointer-events: initial;
             }
         }
         /* wwEditor:end */
@@ -636,16 +641,19 @@ export default {
 
     /* wwEditor:start */
     &__border {
+        opacity: 0;
+        border: 1px dashed var(--ww-color-blue-500);
+        display: block;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        display: none;
         pointer-events: none;
         z-index: 10;
     }
     &__handle {
+        display: flex;
         position: absolute;
         background: white;
         height: 32px;
@@ -660,7 +668,7 @@ export default {
         cursor: ew-resize;
         transition: transform 0.2s ease;
 
-        &:hover,
+        // &:hover,
         &.active {
             transform: translate(-50%, -50%) scale(1.2);
         }
@@ -672,6 +680,8 @@ export default {
         }
     }
     &__units {
+        opacity: 0;
+        pointer-events: none;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -686,11 +696,7 @@ export default {
     &.editing {
         &:hover {
             & > .ww-columns__border {
-                border: 1px solid var(--ww-color-blue-500);
-                &.-bound {
-                    border-color: var(--ww-color-purple-500);
-                }
-                display: block;
+                opacity: 1;
             }
         }
 
