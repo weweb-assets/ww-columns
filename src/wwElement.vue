@@ -326,6 +326,17 @@ export default {
                     case 'move':
                         grid = this.moveItem(this.content.grid, event.fromIndex, event.index);
                         break;
+                    case 'group':
+                        grid = [...this.content.grid];
+                        for (const child of event.movingChildren) {
+                            if (child.layoutIndex !== event.index) {
+                                grid.splice(child.layoutIndex, 1);
+                            }
+                        }
+                        if (this.content.type === 'columns') {
+                            grid = this.fit(event.list, grid);
+                        }
+                        break;
                     default:
                         return;
                 }
