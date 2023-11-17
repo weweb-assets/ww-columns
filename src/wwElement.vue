@@ -74,10 +74,12 @@ export default {
         wwFrontState: { type: Object, required: true },
     },
     emits: ['update:content', 'update:content:effect'],
+    /* wwEditor:start */
     setup() {
         const { createElement } = wwLib.useCreateElement();
         return { createElement };
     },
+    /* wwEditor:end */
     data() {
         return {
             dragingHandle: 'start',
