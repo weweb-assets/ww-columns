@@ -74,6 +74,12 @@ export default {
         wwFrontState: { type: Object, required: true },
     },
     emits: ['update:content', 'update:content:effect'],
+    /* wwEditor:start */
+    setup() {
+        const { createElement } = wwLib.useCreateElement();
+        return { createElement };
+    },
+    /* wwEditor:end */
     data() {
         return {
             dragingHandle: 'start',
@@ -383,24 +389,25 @@ export default {
             if (!_.isEqual(grid, this.content.grid)) this.$emit('update:content:effect', { grid });
         },
         async createContainer(children = []) {
-            return await wwLib.createElement(
+            return await this.createElement(
                 'ww-flexbox',
                 {
-                    default: {
-                        children,
-                        direction: this.direction === 'row' ? 'column' : 'row',
-                        alignItems: 'stretch',
-                    },
-                },
-                {
-                    style: {
+                    content: {
                         default: {
-                            padding: '8px',
+                            children,
+                            direction: this.direction === 'row' ? 'column' : 'row',
+                            alignItems: 'stretch',
+                        },
+                    },
+                    _state: {
+                        style: {
+                            default: {
+                                padding: '8px',
+                            },
                         },
                     },
                 },
-                this.wwFrontState.sectionId,
-                true
+                { keepChildren: true }
             );
         },
         async setPreset(preset) {
