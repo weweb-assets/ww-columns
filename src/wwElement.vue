@@ -1,5 +1,5 @@
 <template>
-    <div class="ww-columns" :class="{ editing: isEditing, empty: isEmpty }">
+    <div class="ww-columns" :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty }">
         <wwLayout
             class="ww-columns__dropzone"
             path="children"
@@ -17,7 +17,7 @@
                             /* wwEditor:start */
                             'show-length': showLength,
                             /* wwEditor:end */
-                            editing: isEditing,
+                            editing: wwEditorState?.canBeEdited,
                             draging: dragingIndex === index,
                         },
                     ]"
@@ -31,7 +31,7 @@
                     ></wwElement>
 
                     <!-- wwEditor:start -->
-                    <template v-if="isEditing && content.type !== 'rows'">
+                    <template v-if="wwEditorState?.canBeEdited && content.type !== 'rows'">
                         <wwEditorDraggable
                             v-if="content.type === 'columns' && index > 0"
                             class="ww-columns__handle start"
@@ -95,13 +95,6 @@ export default {
     computed: {
         screenSize() {
             return this.wwFrontState.screenSize;
-        },
-        isEditing() {
-            /* wwEditor:start */
-            return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
-            /* wwEditor:end */
-            // eslint-disable-next-line no-unreachable
-            return false;
         },
         isBound() {
             /* wwEditor:start */
