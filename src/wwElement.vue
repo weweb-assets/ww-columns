@@ -76,7 +76,7 @@ export default {
     emits: ['update:content', 'update:content:effect'],
     /* wwEditor:start */
     setup() {
-        const { createElement } = wwLib.useCreateElement();
+        const { createElement } = wwLib.wwElement.useCreate();
         return { createElement };
     },
     /* wwEditor:end */
@@ -343,7 +343,7 @@ export default {
 
                 let update = { grid };
                 if (event.type === 'add') {
-                    const componentBaseId = this.$store.getters['websiteData/getWwObjectBaseId'](event.value.uid);
+                    const componentBaseId = wwLib.wwObjectHelper.getWwObject(event.value.uid)?.wwObjectBaseId;
 
                     //ww-flexbox or ww-columns
                     if (
