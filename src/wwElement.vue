@@ -653,7 +653,7 @@ export default {
     /* wwEditor:start */
     &__border {
         opacity: 0;
-        border: 1px dashed var(--ww-color-blue-500);
+        border: 1px dashed var(--ww-color-border-brand);
         display: block;
         position: absolute;
         top: 0;
@@ -666,13 +666,13 @@ export default {
     &__handle {
         display: flex;
         position: absolute;
-        background: white;
+        background: var(--ww-color-bg-success-secondary);
         height: 32px;
         max-height: calc(100% - 6px);
         top: 50%;
         transform: translate(-50%, -50%);
         width: 8px;
-        border: 1px solid var(--ww-color-green-500);
+        border: 1px solid var(--ww-color-border-success);
         box-shadow: 0px 0px 3px #b8bbc0;
         border-radius: 4px;
         z-index: 12;
@@ -697,7 +697,7 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--ww-color-blue-500);
+        background-color: var(--ww-color-bg-brand);
         color: white;
         font-size: 1.8rem;
         padding: var(--ww-spacing-02);
