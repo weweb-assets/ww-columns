@@ -1,5 +1,10 @@
 <template>
-    <div class="ww-columns" :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty }">
+    <component
+        :is="tag"
+        v-bind="properties"
+        class="ww-columns"
+        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty }"
+    >
         <wwLayout
             class="ww-columns__dropzone"
             path="children"
@@ -61,7 +66,7 @@
                 </div>
             </template>
         </wwLayout>
-    </div>
+    </component>
 </template>
 
 <script>
@@ -74,12 +79,21 @@ export default {
         wwFrontState: { type: Object, required: true },
     },
     emits: ['update:content', 'update:content:effect'],
-    /* wwEditor:start */
     setup() {
+        /* wwEditor:start */
         const { createElement } = wwLib.wwElement.useCreate();
-        return { createElement };
+        /* wwEditor:end */
+        const { hasLink, tag: linkTag, properties } = wwLib.wwElement.useLink();
+        return {
+            /* wwEditor:start */
+            createElement,
+            /* wwEditor:end */
+            hasLink,
+            linkTag,
+            properties,
+        };
     },
-    /* wwEditor:end */
+
     data() {
         return {
             dragingHandle: 'start',
@@ -93,6 +107,9 @@ export default {
         };
     },
     computed: {
+        tag() {
+            return this.hasLink ? this.linkTag : 'div';
+        },
         screenSize() {
             return this.wwFrontState.screenSize;
         },
