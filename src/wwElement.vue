@@ -3,7 +3,7 @@
         :is="tag"
         v-bind="properties"
         class="ww-columns"
-        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty }"
+        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty, '-link': hasLink }"
     >
         <wwLayout
             class="ww-columns__dropzone"
@@ -627,6 +627,10 @@ export default {
 .ww-columns {
     position: relative;
     box-sizing: border-box;
+
+    &.-link {
+        cursor: pointer;
+    }
 
     &__dropzone {
         display: flex;
