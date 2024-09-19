@@ -3,7 +3,7 @@
         :is="tag"
         v-bind="properties"
         class="ww-columns"
-        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty, '-link': hasLink }"
+        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty, '-link': hasLink && !isEditing }"
     >
         <wwLayout
             class="ww-columns__dropzone"
@@ -123,6 +123,13 @@ export default {
         isEmpty() {
             /* wwEditor:start */
             return !this.content || !this.content.children || !this.content.children.length;
+            /* wwEditor:end */
+            // eslint-disable-next-line no-unreachable
+            return false;
+        },
+        isEditing() {
+            /* wwEditor:start */
+            return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
