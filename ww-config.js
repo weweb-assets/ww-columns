@@ -6,6 +6,9 @@ export default {
             icon: 'two-columns',
         },
     },
+    options: {
+        linkable: true,
+    },
     properties: {
         grid: {
             hidden: true,
@@ -25,8 +28,8 @@ export default {
                 },
             },
             defaultValue: [],
-             /* wwEditor:start */
-             bindingValidation: {
+            /* wwEditor:start */
+            bindingValidation: {
                 validations: [
                     {
                         type: 'array',
