@@ -16,12 +16,12 @@ export default {
             defaultValue: [],
         },
         children: {
+            type: 'Repeat',
             bindable: 'repeatable',
             label: {
                 en: 'Items',
                 fr: 'Items',
             },
-            type: 'Info',
             options: {
                 text: {
                     en: 'Elements to repeat',
