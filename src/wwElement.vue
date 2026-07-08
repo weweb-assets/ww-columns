@@ -3,7 +3,13 @@
         :is="tag"
         v-bind="properties"
         class="ww-columns"
-        :class="{ editing: wwEditorState?.canBeEdited, empty: isEmpty, '-link': hasLink && !isEditing }"
+        :class="{
+            editing: wwEditorState?.canBeEdited,
+            empty: isEmpty,
+            '-link': hasLink && !isEditing,
+            '-stretch-items': isFlex,
+            '-columns-layout': content.type === 'columns',
+        }"
     >
         <wwLayout
             class="ww-columns__dropzone"
@@ -31,7 +37,6 @@
                     <wwElement
                         v-bind="item"
                         class="ww-columns__object"
-                        :extra-style="wwObjectFlex"
                         :ww-responsive="`wwobject-${index}`"
                     ></wwElement>
 
@@ -142,12 +147,10 @@ export default {
             return this.isDraging || this.isHover;
         },
         /* wwEditor:end */
-        wwObjectFlex() {
-            const style = {};
-            const isFlex = this.content.type !== 'mosaic' || this.content.alignItems === 'stretch';
-            style.flexGrow = isFlex ? '1' : 'unset';
-            if (this.content.type === 'columns') style.alignSelf = 'auto';
-            return style;
+        // Whether column items should grow to fill the layout. Drives a root class consumed by the
+        // stylesheet (was previously forced inline on each child via `:extra-style`).
+        isFlex() {
+            return this.content.type !== 'mosaic' || this.content.alignItems === 'stretch';
         },
         layoutStyle() {
             return {
@@ -637,6 +640,19 @@ export default {
 
     &.-link {
         cursor: pointer;
+    }
+
+    // Column layout imposed on child elements. Was previously forced inline via `:extra-style`
+    // (a legacy hack from the inline-style era); now driven from the stylesheet so children render
+    // purely through the style compiler + these rules.
+    :deep(.ww-columns__object) {
+        flex-grow: unset;
+    }
+    &.-stretch-items :deep(.ww-columns__object) {
+        flex-grow: 1;
+    }
+    &.-columns-layout :deep(.ww-columns__object) {
+        align-self: auto;
     }
 
     &__dropzone {
